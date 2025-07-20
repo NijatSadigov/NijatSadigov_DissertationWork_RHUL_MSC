@@ -1,6 +1,7 @@
 from z3 import * 
 
-# here I am going to solve a sudoku problem using z3
+#EARLY DELIVERABLES TASK 3 (Develop code for SMT solving of a simple example problem (e.g., Sudoku, or job shop scheduling)).
+# here I am going to solve a sudoku problem using z3 
 
 #---------------------#
 # Problem description:
