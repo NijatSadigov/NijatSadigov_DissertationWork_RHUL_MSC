@@ -5,7 +5,7 @@ from z3 import *
 # THis problem taken from CS5980 Autonomous intelligent systems, Final project task 3 which we did during class period in pddl.
 # ----------------------------
 # Problem Description:
-# Puzzle consists of 4 emppy positions. The initial setup is like this:
+# Puzzle consists of 4 empty positions. The initial setup is like this:
 #   [Black, White, White, Empty]
 #
 # Valid Moves:
@@ -49,7 +49,6 @@ def whiteBlackPuzzleSolver(inputState, maxSteps):
     solver.add(cost[0] == 0)
     # Transition rules
     add_transition_constraints(solver, state, cost, maxSteps)
-    # Goal state: strictly enforce ['E', 'W', 'W', 'B'] at the final step
     add_goal_constraints(solver, state, maxSteps)
     if solver.check() == sat:
         model = solver.model()
