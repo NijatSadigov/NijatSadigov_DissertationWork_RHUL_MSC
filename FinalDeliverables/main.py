@@ -1,71 +1,68 @@
 from DifferentPlanningInstances import run_arbitrary_tests, run_random_instance_mode
-from GoldsInMineField import goldsInMineFieldSolver
+from GoldsInMineField import solve_minefield_plan
 from visualizer import visualize_solution
 
-
-def defaultMineFieldSolver():
-    # Define the minefield grid
-    defaultMinefield = [
-        ['.', 'G', 'O','.','O'],
-        ['.', 'G', 'O','.','O'],
-        ['O', '.', '.','G','O'],
-        ['O', '.', '.','G','O'],
-        ['O', '.', '.','G','O'],
+def solve_default_minefield():
+    """Runs the solver on a default field with predefined constraints."""
+    default_minefield = [
+        ['.', 'G', 'O', '.', 'O'],
+        ['.', 'G', 'O', '.', 'O'],
+        ['O', '.', '.', 'G', 'O'],
+        ['O', '.', '.', 'G', 'O'],
+        ['O', '.', '.', 'G', 'O'],
     ]
-    start_position = (0, 0)  # Start position of the robot
-    max_steps = 20
-    print("Default minefield:")
-    print ("Grid:")
-    for row in defaultMinefield:
+    start_position = (0, 0)
+    max_steps = 25
+    
+    # Cost parameters for the default run
+    costs = {'move': 1, 'collect': 2, 'stay': 0}
+    max_total_cost = 30
+    
+    print("\n--- Solving Default Minefield with Cost Constraints ---")
+    print("Grid:")
+    for row in default_minefield:
         print(" ".join(row))
-    print ("Starting position:", start_position)
-    print ("Max steps allowed:", max_steps)
-    solution=goldsInMineFieldSolver(defaultMinefield, start_position, max_steps)
+    print("Starting position:", start_position)
+    print("Max steps allowed:", max_steps)
+    print(f"Costs: Move={costs['move']}, Collect={costs['collect']}, Stay={costs['stay']}")
+    print(f"Maximum allowed cost: {max_total_cost}")
+
+    # Call the refactored solver function
+    solution, final_cost, _ = solve_minefield_plan(
+        default_minefield, start_position, max_steps, max_cost=max_total_cost, costs=costs
+    )
     
     if solution:
-        req= input("\nSolution found! Press 1 to visualize the solution. Press any other key to exit: ")
-        if req == '1':
-            visualize_solution(solution, len(defaultMinefield), len(defaultMinefield[0]))
+        print(f"\nSolution found with a total cost of: {final_cost}!")
+        if input("Press 1 to visualize the solution. Press any other key to exit: ") == '1':
+            visualize_solution(solution, len(default_minefield), len(default_minefield[0]), final_cost=final_cost, costs=costs)
         else:
             print("\nExiting without visualization.")
     else:
-        print("\nNo solution to visualize.")
+        print("\nNo solution found with the given constraints.")
 
-
-#---------------------#
-# Main function to run the solver with different options.
 def main():
-    
+    """Main function to run the solver with different options."""
     print("Starting Golds in MineField Solver...\n")
     while True:
-        print("Please choose correct number for different options:")
-        print("1. Solve Golds in MineField with default minefield.")
-        print("2. Solve Golds in MineField with randomly generated planning instances.")
-        print("3. Solve arbitrary generated planning instances. (Testing)")
+        print("\nPlease choose an option:")
+        print("1. Solve the default minefield (with costs).")
+        print("2. Solve a randomly generated instance.")
+        print("3. Run arbitrary test cases.")
         print("0. Exit.")
         choice = input("Enter your choice: ")
 
         if choice == '1':
-            defaultMineFieldSolver()
+            solve_default_minefield()
+        elif choice == '2':
+            run_random_instance_mode()
+        elif choice == '3':
+            run_arbitrary_tests()
         elif choice == '0':
-            exit(0)
-        elif choice == '2' or choice == '3':
-            
-            if choice == '2':
-                # Placeholder for random generation logic
-                print("Randomly generated planning instances are not implemented yet.")
-                run_random_instance_mode()
-            elif choice == '3':
-                # Placeholder for testing logic
-                print("Testing arbitrary generated planning instances...")
-                run_arbitrary_tests()
-            
+            print("Exiting.")
+            break
         else:
             print("Invalid choice, please try again.")
-#---------------------#
-
-#---------------------#
-
 
 if __name__ == "__main__":
     main()
