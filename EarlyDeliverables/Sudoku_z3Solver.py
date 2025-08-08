@@ -143,7 +143,6 @@ def main():
     ]
     #---------------------#
 
-    # Call the sudoku solver with the easy level puzzle
     print("Easy Level Sudoku:")
     sudokuSolver(easyLevel_puzzle)
     print("\nMedium Level Sudoku:")
