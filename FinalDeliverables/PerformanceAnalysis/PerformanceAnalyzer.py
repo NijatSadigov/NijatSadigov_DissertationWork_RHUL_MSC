@@ -458,7 +458,10 @@ def _run_single_planner_benchmark(planner_config, benchmark_instances, planner_p
         size = sample['grid_size']
         print(f"  Testing grid (Size: {size}x{size})...", end='', flush=True)
 
-        problem_filename = f"temp-problem-{config_name.replace(' ', '-')}.pddl"
+        # Sanitize the config name for use as a filename. 'A*' must become
+        # 'AStar' because '*' is illegal in Windows filenames (matches the
+        # checked-in temp-problem-AStar-*.pddl artifacts).
+        problem_filename = f"temp-problem-{config_name.replace(' ', '-').replace('*', 'Star')}.pddl"
         generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)
 
         domain_filename = "domain.pddl"

@@ -1,0 +1,19 @@
+# Python dependencies for the SMT/BMC MineField planner.
+# Install with:  pip install -r requirements.txt
+#
+# Note: Fast Downward (used only by Performance Analyzer option 5) is NOT a pip
+# package. It is provided as the Linux-only Singularity image
+# FinalDeliverables/PerformanceAnalysis/fast-downward.sif.
+
+# Core SMT solver — required by the planner and both early demos.
+z3-solver>=4.12
+
+# Solution path visualiser. The dissertation references the canonical `pygame`;
+# `pygame-ce` is a drop-in fork that also provides `import pygame` and ships
+# wheels for newer Python versions (e.g. 3.13+) where `pygame` has none.
+# If you prefer the canonical package and it builds on your Python, you may
+# replace the line below with:  pygame>=2.5
+pygame-ce>=2.5
+
+# Performance-analysis plots (optional — analysis runs without it, but no graphs).
+matplotlib>=3.7
