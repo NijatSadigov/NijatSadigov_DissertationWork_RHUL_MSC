@@ -14,7 +14,6 @@ def solve_default_minefield():
     start_position = (0, 0)
     max_steps = 25
     
-    # Cost parameters for the default run
     costs = {'move': 1, 'collect': 2, 'stay': 0}
     max_total_cost = 30
     
@@ -27,7 +26,6 @@ def solve_default_minefield():
     print(f"Costs: Move={costs['move']}, Collect={costs['collect']}, Stay={costs['stay']}")
     print(f"Maximum allowed cost: {max_total_cost}")
 
-    # Call the refactored solver function
     solution, final_cost, _ = solve_minefield_plan(
         default_minefield, start_position, max_steps, max_cost=max_total_cost, costs=costs
     )

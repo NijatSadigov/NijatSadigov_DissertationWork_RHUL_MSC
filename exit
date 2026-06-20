@@ -1,0 +1,1344 @@
+[1mdiff --git a/FinalDeliverables/PerformanceAnalysis/PerformanceAnalyzer.py b/FinalDeliverables/PerformanceAnalysis/PerformanceAnalyzer.py[m
+[1mindex dffcf21..4f1bd8a 100644[m
+[1m--- a/FinalDeliverables/PerformanceAnalysis/PerformanceAnalyzer.py[m
+[1m+++ b/FinalDeliverables/PerformanceAnalysis/PerformanceAnalyzer.py[m
+[36m@@ -2,11 +2,12 @@[m [mimport sys[m
+ import os[m
+ import subprocess[m
+ import glob[m
+[31m-import time[m
+ import csv[m
+ import math[m
+ from pddl_generator import generate_pddl_problem[m
+[32m+[m[32mimport matplotlib.pyplot as plt[m
+ [m
+[32m+[m[32m# --- CSV Helper ---[m
+ def _append_csv_result(csv_path, row, header):[m
+     write_header = not os.path.exists(csv_path)[m
+     with open(csv_path, 'a', newline='', encoding='utf-8') as f:[m
+[36m@@ -14,6 +15,8 @@[m [mdef _append_csv_result(csv_path, row, header):[m
+         if write_header:[m
+             w.writeheader()[m
+         w.writerow(row)[m
+[32m+[m
+[32m+[m[32m# --- System Path Setup ---[m
+ try:[m
+     current_dir = os.path.dirname(os.path.abspath(__file__))[m
+     parent_dir = os.path.dirname(current_dir)[m
+[36m@@ -21,23 +24,44 @@[m [mtry:[m
+ except NameError:[m
+     sys.path.append(os.getcwd())[m
+ [m
+[32m+[m[32m# --- Project Imports ---[m
+ from GoldsInMineField import solve_minefield_plan[m
+[31m-from SampleMaker import (generate_single_grid_instance,[m
+[31m-                         generate_grid_with_gold_count,[m
+[31m-                         generate_grid_with_obstacles,[m
+[31m-                         generate_benchmark_instances)[m
+[31m-from DifferentPlanningInstances import generate_reachable_instance[m
+[32m+[m[32mfrom DifferentPlanningInstances import (generate_reachable_instance, generate_random_instance)[m
+ [m
+ [m
+[31m-try:[m
+[31m-    import matplotlib.pyplot as plt[m
+[31m-    MATPLOTLIB_AVAILABLE = True[m
+[31m-except ImportError:[m
+[31m-    MATPLOTLIB_AVAILABLE = False[m
+[31m-    print("Warning: matplotlib is not installed. Plotting will be disabled.")[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m[32m# ===  HELPER FUNCTIONS ==============================================[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m
+[32m+[m[32mdef _get_pddl_instance_generation_params():[m
+[32m+[m[32m    """Prompts user for seed for PDDL benchmark reproducibility."""[m
+[32m+[m[32m    seed_in = input("Enter a seed for reproducibility (blank for random): ").strip()[m
+[32m+[m[32m    seed = None if seed_in == "" else int(seed_in)[m
+[32m+[m[32m    return seed, True[m
+[32m+[m
+[32m+[m[32mdef _get_z3_analysis_params():[m
+[32m+[m[32m    """Prompts user for common Z3 analysis parameters: time limit, seed, and reachability."""[m
+[32m+[m[32m    try:[m
+[32m+[m[32m        time_limit_in = input("Enter a time limit per run in seconds (default: 120): ").strip()[m
+[32m+[m[32m        time_limit = 120 if time_limit_in == "" else int(time_limit_in)[m
+[32m+[m[32m        if time_limit <= 0:[m
+[32m+[m[32m            print("Time limit must be positive. Using default of 120s.")[m
+[32m+[m[32m            time_limit = 120[m
+[32m+[m[32m    except ValueError:[m
+[32m+[m[32m        print("Invalid number. Using default of 120s.")[m
+[32m+[m[32m        time_limit = 120[m
+[32m+[m
+[32m+[m[32m    seed_in = input("Enter a seed for reproducibility (blank for random): ").strip()[m
+[32m+[m[32m    seed = None if seed_in == "" else int(seed_in)[m
+[32m+[m[41m    [m
+[32m+[m[32m    req_in = input("Require reachability (all gold reachable from start)? (Y/n): ").strip().lower()[m
+[32m+[m[32m    require_reachability = (req_in != 'n')[m
+[32m+[m[41m    [m
+[32m+[m[32m    return time_limit, seed, require_reachability[m
+ [m
+ [m
+ def get_cost_params():[m
+[32m+[m[41m    [m
+     """Helper function to get cost parameters from the user."""[m
+     max_cost_input = None[m
+     costs_input = None[m
+[36m@@ -54,199 +78,281 @@[m [mdef get_cost_params():[m
+             return None, None[m
+     return max_cost_input, costs_input[m
+ [m
+[32m+[m[32mdef _plot_performance_results(title, x_label, success_data, failure_data, x_ticks_range, cancellation_reason=None):[m
+[32m+[m[32m    """[m
+[32m+[m[32m    Generates and displays a performance plot using matplotlib.[m
+[32m+[m
+[32m+[m[32m    Args:[m
+[32m+[m[32m        title (str): The main title for the plot.[m
+[32m+[m[32m        x_label (str): The label for the x-axis.[m
+[32m+[m[32m        success_data (tuple): A tuple of (x_values, y_values) for successful runs.[m
+[32m+[m[32m        failure_data (tuple): A tuple of (x_values, y_values) for failed runs.[m
+[32m+[m[32m        x_ticks_range (range): The range of ticks to display on the x-axis.[m
+[32m+[m[32m        cancellation_reason (str, optional): A message to display if the analysis was cut short.[m
+[32m+[m[32m    """[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    plt.figure(figsize=(12, 8))[m
+[32m+[m[41m    [m
+[32m+[m[32m    success_x, success_y = success_data[m
+[32m+[m[32m    failure_x, failure_y = failure_data[m
+[32m+[m
+[32m+[m[32m    all_x = sorted(list(set(success_x + failure_x)))[m
+[32m+[m[32m    if all_x:[m
+[32m+[m[32m        point_map = {x: y for x, y in zip(success_x, success_y)}[m
+[32m+[m[32m        point_map.update({x: y for x, y in zip(failure_x, failure_y)})[m
+[32m+[m[32m        all_y = [point_map[x] for x in all_x][m
+[32m+[m[32m        plt.plot(all_x, all_y, color='gray', linestyle='--', alpha=0.6, label='_nolegend_')[m
+[32m+[m
+[32m+[m[32m    plt.scatter(success_x, success_y, color='blue', zorder=5, label='Solution Found')[m
+[32m+[m[32m    plt.scatter(failure_x, failure_y, color='red', zorder=5, label='No Solution / Timeout')[m
+[32m+[m[41m    [m
+[32m+[m[32m    plt.title(f"Solver Performance\n{title}")[m
+[32m+[m[32m    plt.xlabel(x_label)[m
+[32m+[m[32m    plt.ylabel("Solve Time (seconds)")[m
+[32m+[m[32m    plt.grid(True)[m
+[32m+[m[32m    if x_ticks_range:[m
+[32m+[m[32m        plt.xticks(x_ticks_range)[m
+[32m+[m[32m    plt.legend()[m
+[32m+[m
+[32m+[m[32m    if cancellation_reason:[m
+[32m+[m[32m        plt.figtext(0.5, 0.01, cancellation_reason, wrap=True, ha="center", fontsize=9, color='red', style='italic')[m
+[32m+[m[32m        plt.tight_layout(rect=[0, 0.05, 1, 1])[m[41m [m
+[32m+[m[32m    else:[m
+[32m+[m[32m        plt.tight_layout()[m
+[32m+[m[41m        [m
+[32m+[m[32m    plt.show()[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m[32m# === MAIN ANALYSIS FUNCTIONS ==================================================[m
+[32m+[m[32m# ==============================================================================[m
+ [m
+ def analyze_performance_by_grid_size():[m
+[31m-    """Analyzes solver performance across multiple grid sizes, with optional cost constraints."""[m
+[31m-    if not MATPLOTLIB_AVAILABLE:[m
+[31m-        print("Cannot run analysis without matplotlib.")[m
+[31m-        return[m
+[32m+[m[32m    """[m
+[32m+[m[32m    Analyzes solver performance by iterating through grid sizes.[m
+[32m+[m[32m    Each grid is randomly generated with 1 gold and 1 obstacle.[m
+[32m+[m[32m    """[m
+ [m
+     try:[m
+[31m-        k = int(input("Enter the maximum grid size to test (up to 40): "))[m
+[31m-        if not (1 <= k <= 40):[m
+[31m-            print("Error: Please enter a number between 1 and 40.")[m
+[31m-            return[m
+[31m-        goal_pos_choice = input("Place goal 'close' to start or 'far'? (c/f): ").lower()[m
+[31m-        if goal_pos_choice not in ['c', 'f']:[m
+[31m-            print("Invalid choice. Please enter 'c' for close or 'f' for far.")[m
+[32m+[m[32m        k = int(input("Enter the maximum grid size to test (e.g., 10): "))[m
+[32m+[m[32m        if not (2 <= k <= 40):[m
+[32m+[m[32m            print("Error: Please enter a number between 2 and 40.")[m
+             return[m
+[31m-        goal_is_close = (goal_pos_choice == 'c')[m
+[31m-        max_steps_input = int(input("Enter max steps (Warning: a low value may make the problem unsolvable): "))[m
+[32m+[m[41m        [m
+[32m+[m[32m        max_steps_input = int(input("Enter max steps (Warning: a low value may make it unsolvable): "))[m
+         if max_steps_input < 1:[m
+             print("Error: Max steps must be at least 1.")[m
+             return[m
+ [m
+[32m+[m[32m        time_limit, seed, require_reachability = _get_z3_analysis_params()[m
+         max_cost, costs = get_cost_params()[m
+ [m
+     except ValueError:[m
+         print("Error: Invalid input. Please enter an integer.")[m
+         return[m
+ [m
+[31m-    BENCHMARK_SAMPLES = generate_benchmark_instances([m
+[31m-        goalClose=goal_is_close, max_size=k, max_steps=max_steps_input[m
+[31m-    )[m
+[31m-    [m
+     success_sizes, success_times = [], [][m
+     failure_sizes, failure_times = [], [][m
+[32m+[m[32m    cancellation_reason = None[m
+     [m
+[31m-    # --- Build Plot Title ---[m
+     title_parts = [[m
+[31m-        f"vs. Grid Size",[m
+[31m-        f"(Goal: {'Close' if goal_is_close else 'Far'}, Steps: {max_steps_input})"[m
+[32m+[m[32m        f"vs. Grid Size (Random Instances)",[m
+[32m+[m[32m        f"(1 Gold, 1 Obstacle, Steps: {max_steps_input})"[m
+     ][m
+     if max_cost is not None:[m
+         title_parts.append(f"(Max Cost: {max_cost})")[m
+[31m-    title = " ".join(title_parts)[m
+[32m+[m[32m    title = "\n".join(title_parts)[m
+ [m
+[31m-    print(f"\n--- Analyzing Performance {title} ---")[m
+[32m+[m[32m    print(f"\n--- Analyzing Performance {title.replace('\n', ' ')} ---")[m
+[32m+[m[32m    print(f"Time limit per run set to {time_limit} seconds.")[m
+[32m+[m[41m    [m
+[32m+[m[32m    current_seed = seed[m
+[32m+[m[32m    for size in range(2, k + 1):[m
+[32m+[m[32m        print(f"\nTesting grid size {size}x{size}...")[m
+[32m+[m
+[32m+[m[32m        grid, start_pos = None, None[m
+[32m+[m[32m        if require_reachability:[m
+[32m+[m[32m            grid, start_pos, tries = generate_reachable_instance([m
+[32m+[m[32m                size, size, num_obstacles=1, num_gold=1, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            if grid:[m
+[32m+[m[32m                print(f"  Generated a reachable instance in {tries} attempt(s).")[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print("  Failed to generate a reachable instance. Skipping this size.")[m
+[32m+[m[32m                if seed is not None: current_seed += 1[m
+[32m+[m[32m                continue[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            grid, start_pos = generate_random_instance([m
+[32m+[m[32m                size, size, num_obstacles=1, num_gold=1, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print("  Generated a random instance.")[m
+ [m
+[31m-    for i, sample in enumerate(BENCHMARK_SAMPLES):[m
+[31m-        size = len(sample['grid'])[m
+[31m-        grid = sample['grid'][m
+[31m-        start_pos = sample['start_pos'][m
+[31m-        max_steps = sample['max_steps'][m
+[32m+[m[32m        if seed is not None:[m
+[32m+[m[32m            current_seed += 1[m
+ [m
+[31m-        print(f"\nTesting grid {i+1}/{k} (Size: {size}x{size})...")[m
+[31m-        [m
+         print("Initial Grid:")[m
+         for row in grid:[m
+             print(f"  {' '.join(row)}")[m
+         [m
+         solution, final_cost, solve_time = solve_minefield_plan([m
+[31m-            grid, start_pos, max_steps, max_cost=max_cost, costs=costs[m
+[32m+[m[32m            grid, start_pos, max_steps_input, max_cost=max_cost, costs=costs[m
+         )[m
+         [m
+[31m-        status = ""[m
+[32m+[m[32m        if solve_time > time_limit:[m
+[32m+[m[32m            cancellation_reason = ([m
+[32m+[m[32m                f"Analysis stopped at grid size {size}x{size}. "[m
+[32m+[m[32m                f"Solve time ({solve_time:.2f}s) exceeded the limit of {time_limit}s."[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print(f"  -> Result: TIMEOUT, Time: {solve_time:.4f} seconds")[m
+[32m+[m[32m            print(f"\n{cancellation_reason}")[m
+[32m+[m[32m            failure_sizes.append(size)[m
+[32m+[m[32m            failure_times.append(solve_time)[m
+[32m+[m[32m            break[m
+[32m+[m
+         if solution:[m
+[31m-            status = "Success"[m
+[31m-            if final_cost is not None:[m
+[31m-                status += f" (Cost: {final_cost})"[m
+[32m+[m[32m            print(f"  -> Result: Success, Time: {solve_time:.4f} seconds")[m
+             success_sizes.append(size)[m
+             success_times.append(solve_time)[m
+         else:[m
+[31m-            status = "Failure (No Solution)"[m
+[32m+[m[32m            print(f"  -> Result: Failure, Time: {solve_time:.4f} seconds")[m
+             failure_sizes.append(size)[m
+             failure_times.append(solve_time)[m
+ [m
+[31m-        print(f"  -> Result: {status}, Time: {solve_time:.4f} seconds")[m
+[31m-[m
+     print("\nAnalysis complete. Generating plot...")[m
+[31m-    plt.figure(figsize=(12, 7))[m
+[31m-    all_sizes = sorted(success_sizes + failure_sizes)[m
+[31m-    all_times = [t for s, t in sorted(zip(success_sizes + failure_sizes, success_times + failure_times))][m
+[31m-    if all_sizes:[m
+[31m-        plt.plot(all_sizes, all_times, color='gray', linestyle='--', alpha=0.6, label='_nolegend_')[m
+[31m-    plt.scatter(success_sizes, success_times, color='blue', zorder=5, label='Solution Found')[m
+[31m-    plt.scatter(failure_sizes, failure_times, color='red', zorder=5, label='No Solution Found')[m
+[31m-    plt.title(f"Solver Performance {title.replace(') (', ', ')}")[m
+[31m-    plt.xlabel("Grid Size (N x N)")[m
+[31m-    plt.ylabel("Solve Time (seconds)")[m
+[31m-    plt.grid(True)[m
+[31m-    plt.xticks(range(1, k + 1))[m
+[31m-    plt.legend()[m
+[31m-    plt.tight_layout()[m
+[31m-    plt.show()[m
+[31m-[m
+[32m+[m[32m    _plot_performance_results([m
+[32m+[m[32m        title=title,[m
+[32m+[m[32m        x_label="Grid Size (N x N)",[m
+[32m+[m[32m        success_data=(success_sizes, success_times),[m
+[32m+[m[32m        failure_data=(failure_sizes, failure_times),[m
+[32m+[m[32m        x_ticks_range=range(2, k + 1),[m
+[32m+[m[32m        cancellation_reason=cancellation_reason[m
+[32m+[m[32m    )[m
+ [m
+ def analyze_performance_by_max_steps():[m
+[31m-    """Analyzes performance by iterating max_steps (k), with optional cost constraints."""[m
+[31m-    if not MATPLOTLIB_AVAILABLE:[m
+[31m-        print("Cannot run analysis without matplotlib.")[m
+[31m-        return[m
+[31m-[m
+[32m+[m[32m    """[m
+[32m+[m[32m    Analyzes performance by iterating max_steps (k) on a single,[m
+[32m+[m[32m    randomly generated grid.[m
+[32m+[m[32m    """[m
+[32m+[m[41m    [m
+     try:[m
+         size = int(input("Enter the desired grid size (e.g., 5): "))[m
+[31m-        if size < 1:[m
+[31m-            print("Error: Grid size must be at least 1.")[m
+[31m-            return[m
+[31m-        goal_pos_choice = input("Place goal 'close' or 'far'? (c/f): ").lower()[m
+[31m-        if goal_pos_choice not in ['c', 'f']:[m
+[32m+[m[32m        num_gold = int(input("Enter the number of gold pieces: "))[m
+[32m+[m[32m        num_obstacles = int(input("Enter the number of obstacles: "))[m
+[32m+[m[41m        [m
+[32m+[m[32m        if num_gold + num_obstacles + 1 > size * size:[m
+[32m+[m[32m            print("Error: Too many items for the grid size. Aborting.")[m
+             return[m
+[31m-        goal_is_close = (goal_pos_choice == 'c')[m
+[31m-        k_max = int(input("Enter the max 'k' to test up to: "))[m
+[32m+[m
+[32m+[m[32m        k_max = int(input("Enter the max 'k' (max_steps) to test up to: "))[m
+         if k_max < 1:[m
+[32m+[m[32m            print("Error: Max 'k' must be at least 1.")[m
+             return[m
+         [m
+[32m+[m[32m        time_limit, seed, require_reachability = _get_z3_analysis_params()[m
+         max_cost, costs = get_cost_params()[m
+ [m
+     except ValueError:[m
+         print("Error: Invalid input.")[m
+         return[m
+ [m
+[31m-    sample = generate_single_grid_instance(size, goal_is_close)[m
+[31m-    grid, start_pos = sample['grid'], sample['start_pos'][m
+[32m+[m[32m    print("\nGenerating a random instance for the analysis...")[m
+[32m+[m[32m    grid, start_pos = None, None[m
+[32m+[m[32m    if require_reachability:[m
+[32m+[m[32m        grid, start_pos, tries = generate_reachable_instance([m
+[32m+[m[32m            size, size, num_obstacles, num_gold, seed=seed[m
+[32m+[m[32m        )[m
+[32m+[m[32m        if not grid:[m
+[32m+[m[32m            print("Failed to generate a reachable instance. Aborting analysis.")[m
+[32m+[m[32m            return[m
+[32m+[m[32m        print(f"  Generated a reachable instance in {tries} attempt(s).")[m
+[32m+[m[32m    else:[m
+[32m+[m[32m        grid, start_pos = generate_random_instance([m
+[32m+[m[32m            size, size, num_obstacles, num_gold, seed=seed[m
+[32m+[m[32m        )[m
+[32m+[m[32m        print("  Generated a random instance.")[m
+ [m
+     title_parts = [[m
+[31m-        f"vs. Max Steps (k) on {size}x{size} Grid"[m
+[32m+[m[32m        f"vs. Max Steps (k) on {size}x{size} Grid",[m
+[32m+[m[32m        f"({num_gold} Gold, {num_obstacles} Obstacles)"[m
+     ][m
+     if max_cost is not None:[m
+         title_parts.append(f"(Max Cost: {max_cost})")[m
+[31m-    title = " ".join(title_parts)[m
+[32m+[m[32m    title = "\n".join(title_parts)[m
+ [m
+[31m-    print(f"\n--- Analyzing Performance {title} ---")[m
+[31m-    print("Initial Grid:")[m
+[32m+[m[32m    print(f"\n--- Analyzing Performance {title.replace('\n', ' ')} ---")[m
+[32m+[m[32m    print(f"Time limit per run set to {time_limit} seconds.")[m
+[32m+[m[32m    print("Using this Grid for all tests:")[m
+     for row in grid:[m
+         print(f"  {' '.join(row)}")[m
+     [m
+     success_k, success_times = [], [][m
+     failure_k, failure_times = [], [][m
+[32m+[m[32m    cancellation_reason = None[m
+ [m
+     for k in range(1, k_max + 1):[m
+         print(f"\nTesting with max_steps = {k}...")[m
+[31m-        solution, final_cost, solve_time = solve_minefield_plan([m
+[32m+[m[32m        solution, _, solve_time = solve_minefield_plan([m
+             grid, start_pos, max_steps=k, max_cost=max_cost, costs=costs[m
+         )[m
+[31m-        status = ""[m
+[32m+[m
+[32m+[m[32m        if solve_time > time_limit:[m
+[32m+[m[32m            cancellation_reason = ([m
+[32m+[m[32m                f"Analysis stopped at max_steps={k}. "[m
+[32m+[m[32m                f"Solve time ({solve_time:.2f}s) exceeded the limit of {time_limit}s."[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print(f"  -> Result: TIMEOUT, Time: {solve_time:.4f} seconds")[m
+[32m+[m[32m            print(f"\n{cancellation_reason}")[m
+[32m+[m[32m            failure_k.append(k)[m
+[32m+[m[32m            failure_times.append(solve_time)[m
+[32m+[m[32m            break[m
+[32m+[m
+         if solution:[m
+[31m-            status = "Success"[m
+[31m-            if final_cost is not None:[m
+[31m-                status += f" (Cost: {final_cost})"[m
+[32m+[m[32m            print(f"  -> Result: Success, Time: {solve_time:.4f} seconds")[m
+             success_k.append(k)[m
+             success_times.append(solve_time)[m
+         else:[m
+[31m-            status = "Failure (No Solution)"[m
+[32m+[m[32m            print(f"  -> Result: Failure, Time: {solve_time:.4f} seconds")[m
+             failure_k.append(k)[m
+             failure_times.append(solve_time)[m
+[31m-        print(f"  -> Result: {status}, Time: {solve_time:.4f} seconds")[m
+[31m-[m
+[31m-    plt.figure(figsize=(12, 7))[m
+[31m-    all_k = sorted(success_k + failure_k)[m
+[31m-    all_times = [t for s, t in sorted(zip(success_k + failure_k, success_times + failure_times))][m
+[31m-    if all_k:[m
+[31m-        plt.plot(all_k, all_times, color='gray', linestyle='--', alpha=0.6, label='_nolegend_')[m
+[31m-    plt.scatter(success_k, success_times, color='green', zorder=5, label='Solution Found')[m
+[31m-    plt.scatter(failure_k, failure_times, color='red', zorder=5, label='No Solution Found')[m
+[31m-    plt.title(f"Solver Performance {title.replace(') (', ', ')}")[m
+[31m-    plt.xlabel("Max Steps (k)")[m
+[31m-    plt.ylabel("Solve Time (seconds)")[m
+[31m-    plt.grid(True)[m
+[31m-    plt.xticks(range(1, k_max + 1))[m
+[31m-    plt.legend()[m
+[31m-    plt.tight_layout()[m
+[31m-    plt.show()[m
+ [m
+[32m+[m[32m    print("\nAnalysis complete. Generating plot...")[m
+[32m+[m[32m    _plot_performance_results([m
+[32m+[m[32m        title=title,[m
+[32m+[m[32m        x_label="Max Steps (k)",[m
+[32m+[m[32m        success_data=(success_k, success_times),[m
+[32m+[m[32m        failure_data=(failure_k, failure_times),[m
+[32m+[m[32m        x_ticks_range=range(1, k_max + 1),[m
+[32m+[m[32m        cancellation_reason=cancellation_reason[m
+[32m+[m[32m    )[m
+ [m
+ def analyze_performance_by_gold_count():[m
+[31m-    """Analyzes performance by iterating gold count, with optional cost constraints."""[m
+[31m-    if not MATPLOTLIB_AVAILABLE:[m
+[31m-        print("Cannot run analysis without matplotlib.")[m
+[31m-        return[m
+[31m-        [m
+[32m+[m[32m    """[m
+[32m+[m[32m    Analyzes performance by iterating the gold count. For each count,[m
+[32m+[m[32m    a new random instance is generated with a fixed number of obstacles.[m
+[32m+[m[32m    """[m
+[32m+[m[41m    [m
+     try:[m
+[31m-        size = int(input("Enter the desired grid size (e.g., 5): "))[m
+[31m-        if size < 1:[m
+[31m-            return[m
+[32m+[m[32m        size = int(input("Enter the desired grid size (e.g., 8): "))[m
+[32m+[m[32m        num_obstacles = int(input("Enter the fixed number of obstacles: "))[m
+         max_steps = int(input("Enter the fixed max steps (k): "))[m
+[31m-        if max_steps < 1:[m
+[32m+[m[41m        [m
+[32m+[m[32m        max_possible_gold = size * size - 1 - num_obstacles[m
+[32m+[m[32m        if max_possible_gold < 1:[m
+[32m+[m[32m            print("Error: Not enough space for even one gold with the given obstacles.")[m
+             return[m
+[31m-        max_possible_gold = size * size - 1[m
+[32m+[m
+         gold_prompt = (f"Enter max gold count to test up to (max possible is {max_possible_gold}): ")[m
+         max_gold_input = int(input(gold_prompt))[m
+[32m+[m[32m        max_gold_input = min(max_gold_input, max_possible_gold)[m
+         if max_gold_input < 1:[m
+[32m+[m[32m            print("Error: Max gold must be at least 1.")[m
+             return[m
+[31m-        max_gold_input = min(max_gold_input, max_possible_gold)[m
+[31m-        place_gold_close = input("Place gold 'close' or 'far'? (c/f): ").lower() == 'c'[m
+ [m
+[32m+[m[32m        time_limit, seed, require_reachability = _get_z3_analysis_params()[m
+         max_cost, costs = get_cost_params()[m
+ [m
+     except ValueError:[m
+[36m@@ -255,302 +361,372 @@[m [mdef analyze_performance_by_gold_count():[m
+ [m
+     title_parts = [[m
+         f"vs. Gold Count on {size}x{size} Grid",[m
+[31m-        f"(Steps: {max_steps})"[m
+[32m+[m[32m        f"(Steps: {max_steps}, Obstacles: {num_obstacles})"[m
+     ][m
+     if max_cost is not None:[m
+         title_parts.append(f"(Max Cost: {max_cost})")[m
+[31m-    title = " ".join(title_parts)[m
+[32m+[m[32m    title = "\n".join(title_parts)[m
+         [m
+[31m-    print(f"\n--- Analyzing Performance {title} ---")[m
+[32m+[m[32m    print(f"\n--- Analyzing Performance {title.replace('\n', ' ')} ---")[m
+[32m+[m[32m    print(f"Time limit per run set to {time_limit} seconds.")[m
+     [m
+     success_golds, success_times = [], [][m
+     failure_golds, failure_times = [], [][m
+[32m+[m[32m    cancellation_reason = None[m
+     [m
+[32m+[m[32m    current_seed = seed[m
+     for g_count in range(1, max_gold_input + 1):[m
+         print(f"\nTesting with {g_count} gold piece(s)...")[m
+[31m-        sample = generate_grid_with_gold_count(size, g_count, place_gold_close)[m
+[31m-        grid, start_pos = sample['grid'], sample['start_pos'][m
+[32m+[m[41m        [m
+[32m+[m[32m        grid, start_pos = None, None[m
+[32m+[m[32m        if require_reachability:[m
+[32m+[m[32m            grid, start_pos, tries = generate_reachable_instance([m
+[32m+[m[32m                size, size, num_obstacles, g_count, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            if not grid:[m
+[32m+[m[32m                print("  Failed to generate a reachable instance. Skipping this count.")[m
+[32m+[m[32m                if seed is not None: current_seed += 1[m
+[32m+[m[32m                continue[m
+[32m+[m[32m            print(f"  Generated a reachable instance in {tries} attempt(s).")[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            grid, start_pos = generate_random_instance([m
+[32m+[m[32m                size, size, num_obstacles, g_count, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print("  Generated a random instance.")[m
+[32m+[m
+[32m+[m[32m        if seed is not None:[m
+[32m+[m[32m            current_seed += 1[m
+[32m+[m
+         print("Generated Grid:")[m
+         for row in grid:[m
+             print(f"  {' '.join(row)}")[m
+         [m
+[31m-        solution, final_cost, solve_time = solve_minefield_plan([m
+[32m+[m[32m        solution, _, solve_time = solve_minefield_plan([m
+             grid, start_pos, max_steps, max_cost=max_cost, costs=costs[m
+         )[m
+         [m
+[31m-        status = ""[m
+[32m+[m[32m        if solve_time > time_limit:[m
+[32m+[m[32m            cancellation_reason = ([m
+[32m+[m[32m                f"Analysis stopped at {g_count} gold pieces. "[m
+[32m+[m[32m                f"Solve time ({solve_time:.2f}s) exceeded the limit of {time_limit}s."[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print(f"  -> Result: TIMEOUT, Time: {solve_time:.4f} seconds")[m
+[32m+[m[32m            print(f"\n{cancellation_reason}")[m
+[32m+[m[32m            failure_golds.append(g_count)[m
+[32m+[m[32m            failure_times.append(solve_time)[m
+[32m+[m[32m            break[m
+[32m+[m
+         if solution:[m
+[31m-            status = "Success"[m
+[31m-            if final_cost is not None:[m
+[31m-                status += f" (Cost: {final_cost})"[m
+[32m+[m[32m            print(f"  -> Result: Success, Time: {solve_time:.4f} seconds")[m
+             success_golds.append(g_count)[m
+             success_times.append(solve_time)[m
+         else:[m
+[31m-            status = "Failure (No Solution)"[m
+[32m+[m[32m            print(f"  -> Result: Failure, Time: {solve_time:.4f} seconds")[m
+             failure_golds.append(g_count)[m
+             failure_times.append(solve_time)[m
+             [m
+[31m-        print(f"  -> Result: {status}, Time: {solve_time:.4f} seconds")[m
+[31m-[m
+[31m-    plt.figure(figsize=(12, 7))[m
+[31m-    all_g = sorted(success_golds + failure_golds)[m
+[31m-    all_times = [t for g, t in sorted(zip(success_golds + failure_golds, success_times + failure_times))][m
+[31m-    if all_g:[m
+[31m-        plt.plot(all_g, all_times, color='gray', linestyle='--', alpha=0.6, label='_nolegend_')[m
+[31m-    plt.scatter(success_golds, success_times, color='blue', zorder=5, label='Solution Found')[m
+[31m-    plt.scatter(failure_golds, failure_times, color='red', zorder=5, label='No Solution Found')[m
+[31m-    plt.title(f"Solver Performance {title.replace(') (', ', ')}")[m
+[31m-    plt.xlabel("Number of Gold Pieces")[m
+[31m-    plt.ylabel("Solve Time (seconds)")[m
+[31m-    plt.grid(True)[m
+[31m-    plt.xticks(range(1, max_gold_input + 1))[m
+[31m-    plt.legend()[m
+[31m-    plt.tight_layout()[m
+[31m-    plt.show()[m
+[31m-[m
+[32m+[m[32m    print("\nAnalysis complete. Generating plot...")[m
+[32m+[m[32m    _plot_performance_results([m
+[32m+[m[32m        title=title,[m
+[32m+[m[32m        x_label="Number of Gold Pieces",[m
+[32m+[m[32m        success_data=(success_golds, success_times),[m
+[32m+[m[32m        failure_data=(failure_golds, failure_times),[m
+[32m+[m[32m        x_ticks_range=range(1, max_gold_input + 1),[m
+[32m+[m[32m        cancellation_reason=cancellation_reason[m
+[32m+[m[32m    )[m
+ [m
+ def analyze_performance_by_obstacle_density():[m
+[31m-    """Analyzes performance by iterating obstacle count, with optional cost constraints."""[m
+[31m-    if not MATPLOTLIB_AVAILABLE:[m
+[31m-        print("Cannot run analysis without matplotlib.")[m
+[31m-        return[m
+[31m-[m
+[32m+[m[32m    """[m
+[32m+[m[32m    Analyzes performance by iterating obstacle count. For each count,[m
+[32m+[m[32m    a new random instance is generated with a fixed number of gold pieces.[m
+[32m+[m[32m    """[m
+[32m+[m[41m    [m
+     try:[m
+[31m-        size = int(input("Enter grid size (e.g., 5): "))[m
+[31m-        if size < 2:[m
+[31m-            print("Error: Grid size must be at least 2 for this analysis.")[m
+[31m-            return[m
+[32m+[m[32m        size = int(input("Enter grid size (e.g., 8): "))[m
+[32m+[m[32m        num_gold = int(input("Enter the fixed number of gold pieces: "))[m
+         max_steps = int(input("Enter fixed max steps (k): "))[m
+[31m-        if max_steps < 1:[m
+[31m-            return[m
+[31m-        is_random = input("Obstacle placement: 'random' or 'predefined'? (r/p): ").lower() == 'r'[m
+         [m
+[31m-        max_possible = size * size - 2 if is_random else (size - 1) * size[m
+[31m-        prompt = f"Enter max obstacle count (max possible is {max_possible}): "[m
+[32m+[m[32m        max_possible_obs = size * size - 1 - num_gold[m
+[32m+[m[32m        if max_possible_obs < 0:[m
+[32m+[m[32m            print("Error: Not enough space for obstacles with the given gold count.")[m
+[32m+[m[32m            return[m
+[32m+[m
+[32m+[m[32m        prompt = f"Enter max obstacle count to test up to (max possible is {max_possible_obs}): "[m
+         max_obs_input = int(input(prompt))[m
+[32m+[m[32m        max_obs_input = min(max_obs_input, max_possible_obs)[m
+         if max_obs_input < 0:[m
+[32m+[m[32m            print("Error: Max obstacles must be non-negative.")[m
+             return[m
+[31m-        max_obs_input = min(max_obs_input, max_possible)[m
+ [m
+[32m+[m[32m        time_limit, seed, require_reachability = _get_z3_analysis_params()[m
+         max_cost, costs = get_cost_params()[m
+ [m
+     except ValueError:[m
+         print("Error: Invalid input.")[m
+         return[m
+         [m
+[31m-    placement_str = "Random" if is_random else "Predefined"[m
+     title_parts = [[m
+[31m-        f"vs. Obstacle Density on {size}x{size} Grid",[m
+[31m-        f"({placement_str})"[m
+[32m+[m[32m        f"vs. Obstacle Count on {size}x{size} Grid",[m
+[32m+[m[32m        f"(Steps: {max_steps}, Gold: {num_gold})"[m
+     ][m
+     if max_cost is not None:[m
+         title_parts.append(f"(Max Cost: {max_cost})")[m
+[31m-    title = " ".join(title_parts)[m
+[32m+[m[32m    title = "\n".join(title_parts)[m
+ [m
+[31m-    print(f"\n--- Analyzing Performance {title} ---")[m
+[32m+[m[32m    print(f"\n--- Analyzing Performance {title.replace('\n', ' ')} ---")[m
+[32m+[m[32m    print(f"Time limit per run set to {time_limit} seconds.")[m
+     [m
+     success_obs, success_times = [], [][m
+     failure_obs, failure_times = [], [][m
+[32m+[m[32m    cancellation_reason = None[m
+     [m
+[32m+[m[32m    current_seed = seed[m
+     for o_count in range(max_obs_input + 1):[m
+         print(f"\nTesting with {o_count} obstacle(s)...")[m
+[31m-        sample = generate_grid_with_obstacles(size, o_count, is_random)[m
+[31m-        grid, start_pos = sample['grid'], sample['start_pos'][m
+[32m+[m[41m        [m
+[32m+[m[32m        grid, start_pos = None, None[m
+[32m+[m[32m        if require_reachability:[m
+[32m+[m[32m            grid, start_pos, tries = generate_reachable_instance([m
+[32m+[m[32m                size, size, o_count, num_gold, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            if not grid:[m
+[32m+[m[32m                print("  Failed to generate a reachable instance. Skipping this count.")[m
+[32m+[m[32m                if seed is not None: current_seed += 1[m
+[32m+[m[32m                continue[m
+[32m+[m[32m            print(f"  Generated a reachable instance in {tries} attempt(s).")[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            grid, start_pos = generate_random_instance([m
+[32m+[m[32m                size, size, o_count, num_gold, seed=current_seed[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print("  Generated a random instance.")[m
+[32m+[m
+[32m+[m[32m        if seed is not None:[m
+[32m+[m[32m            current_seed += 1[m
+[32m+[m
+         print("Generated Grid:")[m
+         for row in grid:[m
+             print(f"  {' '.join(row)}")[m
+         [m
+[31m-        solution, final_cost, solve_time = solve_minefield_plan([m
+[32m+[m[32m        solution, _, solve_time = solve_minefield_plan([m
+             grid, start_pos, max_steps, max_cost=max_cost, costs=costs[m
+         )[m
+         [m
+[31m-        status = ""[m
+[32m+[m[32m        if solve_time > time_limit:[m
+[32m+[m[32m            cancellation_reason = ([m
+[32m+[m[32m                f"Analysis stopped at {o_count} obstacles. "[m
+[32m+[m[32m                f"Solve time ({solve_time:.2f}s) exceeded the limit of {time_limit}s."[m
+[32m+[m[32m            )[m
+[32m+[m[32m            print(f"  -> Result: TIMEOUT, Time: {solve_time:.4f} seconds")[m
+[32m+[m[32m            print(f"\n{cancellation_reason}")[m
+[32m+[m[32m            failure_obs.append(o_count)[m
+[32m+[m[32m            failure_times.append(solve_time)[m
+[32m+[m[32m            break[m
+[32m+[m[41m        [m
+         if solution:[m
+[31m-            status = "Success"[m
+[31m-            if final_cost is not None:[m
+[31m-                status += f" (Cost: {final_cost})"[m
+[32m+[m[32m            print(f"  -> Result: Success, Time: {solve_time:.4f} seconds")[m
+             success_obs.append(o_count)[m
+             success_times.append(solve_time)[m
+         else:[m
+[31m-            status = "Failure (No Solution)"[m
+[32m+[m[32m            print(f"  -> Result: Failure, Time: {solve_time:.4f} seconds")[m
+             failure_obs.append(o_count)[m
+             failure_times.append(solve_time)[m
+             [m
+[31m-        print(f"  -> Result: {status}, Time: {solve_time:.4f} seconds")[m
+[31m-[m
+[31m-    plt.figure(figsize=(12, 7))[m
+[31m-    all_o = sorted(success_obs + failure_obs)[m
+[31m-    all_times = [t for o, t in sorted(zip(success_obs + failure_obs, success_times + failure_times))][m
+[31m-    if all_o or o_count == 0:[m
+[31m-        plt.plot(all_o, all_times, color='gray', linestyle='--', alpha=0.6, label='_nolegend_')[m
+[31m-    plt.scatter(success_obs, success_times, color='blue', zorder=5, label='Solution Found')[m
+[31m-    plt.scatter(failure_obs, failure_times, color='red', zorder=5, label='No Solution Found')[m
+[31m-    plt.title(f"Solver Performance {title.replace(') (', ', ')}")[m
+[31m-    plt.xlabel("Number of Obstacles")[m
+[31m-    plt.ylabel("Solve Time (seconds)")[m
+[31m-    plt.grid(True)[m
+[31m-    plt.xticks(range(max_obs_input + 1))[m
+[31m-    plt.legend()[m
+[31m-    plt.tight_layout()[m
+[31m-    plt.show()[m
+[31m-[m
+[31m-[m
+[31m-def _run_single_z3_benchmark(benchmark_instances):[m
+[32m+[m[32m    print("\nAnalysis complete. Generating plot...")[m
+[32m+[m[32m    _plot_performance_results([m
+[32m+[m[32m        title=title,[m
+[32m+[m[32m        x_label="Number of Obstacles",[m
+[32m+[m[32m        success_data=(success_obs, success_times),[m
+[32m+[m[32m        failure_data=(failure_obs, failure_times),[m
+[32m+[m[32m        x_ticks_range=range(max_obs_input + 1),[m
+[32m+[m[32m        cancellation_reason=cancellation_reason[m
+[32m+[m[32m    )[m
+[32m+[m[32mdef cost_effect_performance_analyser():[m
+     """[m
+[31m-    A helper function that runs the benchmark for the Z3 SMT solver.[m
+[31m-    [m
+[31m-    Returns:[m
+[31m-        A tuple containing three lists: (sizes, times, plan_lengths)[m
+[32m+[m[32m    Analyzes and compares solver performance under different cost scenarios[m
+[32m+[m[32m    by iterating through progressively larger grid sizes.[m
+     """[m
+[31m-    sizes, times, plan_lengths = [], [], [][m
+[31m-    print("\n--- Running Benchmark for: Z3 Solver ---")[m
+[32m+[m[41m    [m
+ [m
+[31m-    for sample in benchmark_instances:[m
+[31m-        grid = sample['grid'][m
+[31m-        start_pos = sample['start_pos'][m
+[31m-        max_steps = sample['max_steps'][m
+[31m-        size = sample['grid_size'][m
+[31m-        print(f"  Testing grid (Size: {size}x{size}, MaxSteps: {max_steps})...", end='', flush=True)[m
+[32m+[m[32m    density_map = {'r': 0.10, 'c': 0.30, 'cr': 0.45}[m
+[32m+[m[32m    density_names = {'r': 'Rare', 'c': 'Common', 'cr': 'Crowded'}[m
+ [m
+[31m-        solution, _, solve_time = solve_minefield_plan([m
+[31m-            grid, start_pos, max_steps, max_cost=None, costs=None[m
+[31m-        )[m
+[32m+[m[32m    try:[m
+[32m+[m[32m        print("\n--- Configure Cost Effect Benchmark ---")[m
+[32m+[m[32m        max_size = int(input("Enter the maximum grid size to test (e.g., 10): ") or 10)[m
+         [m
+[31m-        plan_length = 0[m
+[31m-        if solution:[m
+[31m-            plan_length = len(solution) - 1[m
+[31m-            print(f" ->  Success! Length: {plan_length}, Time: {solve_time:.4f}s")[m
+[31m-            sizes.append(size)[m
+[31m-            times.append(solve_time)[m
+[31m-            plan_lengths.append(plan_length)[m
+[32m+[m[32m        gold_density_key = input("Gold density [r]are/[c]ommon/[cr]owded (default: c): ").strip().lower() or 'c'[m
+[32m+[m[32m        obs_density_key = input("Obstacle density [r]are/[c]ommon/[cr]owded (default: c): ").strip().lower() or 'c'[m
+[32m+[m
+[32m+[m[32m        if gold_density_key not in density_map or obs_density_key not in density_map:[m
+[32m+[m[32m            print("Invalid density key. Please use 'r', 'c', or 'cr'.")[m
+[32m+[m[32m            return[m
+[32m+[m[41m        [m
+[32m+[m[32m        max_steps = int(input("Enter fixed max steps (k) for all runs (e.g., 30): ") or 30)[m
+[32m+[m[32m        time_limit, seed, _ = _get_z3_analysis_params()[m[41m [m
+[32m+[m
+[32m+[m[32m        print("\n--- Defining Cost Scenarios ---")[m
+[32m+[m[32m        print("Three scenarios will be tested: No Cost, a High-Cost (generous) budget, and a Low-Cost (restrictive) budget.")[m
+[32m+[m[32m        generous_max_cost = int(input("Enter the max cost for the 'High-Cost Budget' scenario (e.g., 30): ") or 30)[m
+[32m+[m[32m        low_max_cost = int(input("Enter the max cost for the 'Low-Cost Budget' scenario (e.g., 5): ") or 5)[m
+[32m+[m[41m        [m
+[32m+[m[32m        print("\nEnter the costs for actions:")[m
+[32m+[m[32m        move_cost = int(input("  Cost for 'move' (e.g., 1): ") or 1)[m
+[32m+[m[32m        collect_cost = int(input("  Cost for 'collect' (e.g., 2): ") or 2)[m
+[32m+[m[32m        stay_cost = int(input("  Cost for 'stay' (e.g., 0): ") or 0)[m
+[32m+[m[41m        [m
+[32m+[m[32m        costs_input = {'move': move_cost, 'collect': collect_cost, 'stay': stay_cost}[m
+[32m+[m
+[32m+[m[32m    except ValueError:[m
+[32m+[m[32m        print("Error: Invalid input. Please enter integers only.")[m
+[32m+[m[32m        return[m
+[32m+[m
+[32m+[m[32m    print(f"\nGenerating {max_size-1} benchmark instances...")[m
+[32m+[m[32m    benchmark_instances = [][m
+[32m+[m[32m    current_seed = seed[m
+[32m+[m[32m    for size in range(2, max_size + 1):[m
+[32m+[m[32m        total_cells = size * size[m
+[32m+[m[32m        num_gold = max(1, math.floor(total_cells * density_map[gold_density_key]))[m
+[32m+[m[32m        num_obstacles = math.floor(total_cells * density_map[obs_density_key])[m
+[32m+[m
+[32m+[m[32m        if num_gold + num_obstacles >= total_cells:[m
+[32m+[m[32m            print(f"Warning: At size {size}x{size}, item count exceeds cell count. Skipping.")[m
+[32m+[m[32m            continue[m
+[32m+[m[41m            [m
+[32m+[m[32m        print(f"  Generating size {size}x{size} (Gold: {num_gold}, Obs: {num_obstacles})...", end='', flush=True)[m
+[32m+[m[32m        grid, start_pos, tries = generate_reachable_instance([m
+[32m+[m[32m            size, size, num_obstacles, num_gold, seed=current_seed[m
+[32m+[m[32m        )[m
+[32m+[m[32m        if grid:[m
+[32m+[m[32m            print(f" Found after {tries} tries.")[m
+[32m+[m[32m            if current_seed is not None: current_seed += 1[m
+[32m+[m[32m            benchmark_instances.append({[m
+[32m+[m[32m                'grid': grid, 'start_pos': start_pos, 'grid_size': size[m
+[32m+[m[32m            })[m
+         else:[m
+[31m-            print(' -> Failure')[m
+[32m+[m[32m            print(f" Failed after many tries. Aborting benchmark generation.")[m
+[32m+[m[32m            break[m
+[32m+[m[41m            [m
+[32m+[m[32m    if not benchmark_instances:[m
+[32m+[m[32m        print("\nNo benchmark instances were generated. Exiting.")[m
+[32m+[m[32m        return[m
+[32m+[m
+[32m+[m[32m    cost_scenarios = [[m
+[32m+[m[32m        {"name": "No Cost", "max_cost": None, "costs": None},[m
+[32m+[m[32m        {"name": "High-Cost Budget", "max_cost": generous_max_cost, "costs": costs_input},[m
+[32m+[m[32m        {"name": "Low-Cost Budget", "max_cost": low_max_cost, "costs": costs_input}[m
+[32m+[m[32m    ][m
+[32m+[m[41m    [m
+[32m+[m[32m    results = {scenario["name"]: {"success": [], "failure": []} for scenario in cost_scenarios}[m
+[32m+[m
+[32m+[m[32m    for scenario in cost_scenarios:[m
+[32m+[m[32m        name = scenario["name"][m
+[32m+[m[32m        print(f"\n--- Running Benchmark for: {name} ---")[m
+[32m+[m[32m        for instance in benchmark_instances:[m
+[32m+[m[32m            size = instance['grid_size'][m
+[32m+[m[32m            print(f"  Testing grid size {size}x{size}...", end='', flush=True)[m
+[32m+[m
+[32m+[m[32m            solution, _, solve_time = solve_minefield_plan([m
+[32m+[m[32m                instance['grid'], instance['start_pos'], max_steps,[m[41m [m
+[32m+[m[32m                max_cost=scenario['max_cost'], costs=scenario['costs'][m
+[32m+[m[32m            )[m
+[32m+[m
+[32m+[m[32m            if solve_time > time_limit:[m
+[32m+[m[32m                print(f" -> TIMEOUT ({solve_time:.2f}s)")[m
+[32m+[m[32m                results[name]["failure"].append((size, solve_time))[m
+[32m+[m[32m                break[m[41m [m
+[32m+[m[32m            elif solution:[m
+[32m+[m[32m                print(f" -> Success ({solve_time:.2f}s)")[m
+[32m+[m[32m                results[name]["success"].append((size, solve_time))[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print(f" -> No Solution ({solve_time:.2f}s)")[m
+[32m+[m[32m                results[name]["failure"].append((size, solve_time))[m
+[32m+[m
+[32m+[m[32m    print("\nAnalysis complete. Generating comparison plot...")[m
+[32m+[m[32m    plt.figure(figsize=(12, 8))[m
+[32m+[m[41m    [m
+[32m+[m[32m    colors = {"No Cost": "blue", "High-Cost Budget": "green", "Low-Cost Budget": "red"}[m
+[32m+[m
+[32m+[m[32m    for name, data in results.items():[m
+[32m+[m[32m        if data["success"]:[m
+[32m+[m[32m            sizes, times = zip(*data["success"])[m
+[32m+[m[32m            plt.plot(sizes, times, 'o-', label=f"{name} (Success)", color=colors[name])[m
+         [m
+[31m-        csv_row = {[m
+[31m-            'planner': 'Z3 Solver',[m
+[31m-            'grid_size': size,[m
+[31m-            'solve_time_search_s': solve_time,[m
+[31m-            'translator_time_s': 0, [m
+[31m-            'plan_length': plan_length,[m
+[31m-            'optimal': False [m
+[31m-        }[m
+[31m-        _append_csv_result(os.path.join(os.getcwd(), 'benchmark_results.csv'), csv_row,[m
+[31m-                           header=['planner','grid_size','solve_time_search_s','translator_time_s','plan_length','optimal'])[m
+[32m+[m[32m        if data["failure"]:[m
+[32m+[m[32m            sizes, times = zip(*data["failure"])[m
+[32m+[m[32m            plt.plot(sizes, times, 'x--', label=f"{name} (Failure/Timeout)", color=colors[name], markersize=8)[m
+[32m+[m
+[32m+[m[32m    title_line1 = f"Cost Constraint Performance Comparison"[m
+[32m+[m[32m    title_line2 = f"(Gold: {density_names[gold_density_key]}, Obstacles: {density_names[obs_density_key]}, k={max_steps})"[m
+[32m+[m[32m    plt.title(f"{title_line1}\n{title_line2}")[m
+[32m+[m[32m    plt.xlabel("Grid Size (N x N)")[m
+[32m+[m[32m    plt.ylabel("Solve Time (seconds)")[m
+[32m+[m[32m    plt.grid(True)[m
+[32m+[m[32m    plt.xticks(range(2, max_size + 1))[m
+[32m+[m[32m    plt.legend()[m
+[32m+[m[32m    plt.tight_layout()[m
+[32m+[m[32m    plt.show()[m
+ [m
+[31m-    return sizes, times, plan_lengths[m
+ [m
+ [m
+[31m-def _run_single_planner_benchmark(planner_config, benchmark_instances, planner_path):[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m[32m# === COMPARATIVE ANALYSIS (PDDL) ==============================================[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m
+[32m+[m[32mdef _execute_planner_run(planner_config, problem_filename, domain_filename, planner_path):[m
+     """[m
+[31m-    A helper function that runs the benchmark for a single planner configuration.[m
+[31m-    [m
+[31m-    Returns:[m
+[31m-        A tuple containing three lists: (sizes, times, plan_lengths)[m
+[32m+[m[32m    Executes a single run of a PDDL planner and parses the output.[m
+[32m+[m[32m    Returns: Tuple (success, search_time, translator_time, plan_length)[m
+     """[m
+[31m-    sizes, times, plan_lengths = [], [], [][m
+[31m-    config_name = planner_config['name'][m
+[31m-    [m
+[31m-    print(f"\n--- Running Benchmark for: {config_name} ---")[m
+[32m+[m[32m    planner_type, planner_value = planner_config['type'], planner_config['value'][m
+ [m
+[31m-    for sample in benchmark_instances:[m
+[31m-        grid = sample['grid'][m
+[31m-        start_pos = sample['start_pos'][m
+[31m-        size = sample['grid_size'][m
+[31m-        print(f"  Testing grid (Size: {size}x{size})...", end='', flush=True)[m
+[32m+[m[32m    if planner_type == 'search':[m
+[32m+[m[32m        full_command = [f"./{planner_path}", domain_filename, problem_filename, "--search", planner_value][m
+[32m+[m[32m    else:[m[41m [m
+[32m+[m[32m        full_command = [f"./{planner_path}", "--alias", planner_value, domain_filename, problem_filename][m
+ [m
+[31m-        problem_filename = f"temp-problem-{config_name.replace(' ', '-')}.pddl"[m
+[31m-        generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)[m
+[32m+[m[32m    result = subprocess.run(full_command, capture_output=True, text=True, check=False)[m
+ [m
+[31m-        domain_filename = "domain.pddl"[m
+[31m-        [m
+[31m-        planner_type = planner_config['type'][m
+[31m-        planner_value = planner_config['value'][m
+[31m-[m
+[31m-        if planner_type == 'search':[m
+[31m-            full_command = [[m
+[31m-                f"./{planner_path}",[m
+[31m-                domain_filename,[m
+[31m-                problem_filename,[m
+[31m-                "--search",[m
+[31m-                planner_value[m
+[31m-            ][m
+[31m-        else:[m
+[31m-            full_command = [[m
+[31m-                f"./{planner_path}",[m
+[31m-                "--alias",[m
+[31m-                planner_value,[m
+[31m-                domain_filename,[m
+[31m-                problem_filename[m
+[31m-            ][m
+[31m-[m
+[31m-        result = subprocess.run(full_command, capture_output=True, text=True, check=False)[m
+[31m-[m
+[31m-        plan_candidates = sorted(glob.glob('sas_plan*'), key=os.path.getmtime)[m
+[31m-        success = ('Solution found.' in result.stdout)[m
+[31m-        length = None[m
+[31m-        if success and plan_candidates:[m
+[31m-            plan_file = plan_candidates[-1][m
+[32m+[m[32m    plan_candidates = sorted(glob.glob('sas_plan*'), key=os.path.getmtime)[m
+[32m+[m[32m    success = 'Solution found.' in result.stdout[m
+[32m+[m[32m    plan_length = None[m
+[32m+[m[32m    if success and plan_candidates:[m
+[32m+[m[32m        plan_file = plan_candidates[-1][m
+[32m+[m[32m        try:[m
+             with open(plan_file, 'r', encoding='utf-8') as f:[m
+[31m-                length = len([line for line in f if line.strip() and not line.strip().startswith(';')])[m
+[31m-            try:[m
+[31m-                os.remove(plan_file)[m
+[31m-            except OSError:[m
+[31m-                pass[m
+[32m+[m[32m                plan_length = len([line for line in f if line.strip() and not line.strip().startswith(';')])[m
+[32m+[m[32m            os.remove(plan_file)[m
+[32m+[m[32m        except OSError: pass[m
+ [m
+[31m-        lines_out = result.stdout.split('\n')[m
+[31m-        st_line = next((ln for ln in lines_out if 'Search time:' in ln), None)[m
+[31m-        tr_line = next((ln for ln in lines_out if 'Translator time:' in ln), None)[m
+[31m-        def _parse_time(ln):[m
+[31m-            try:[m
+[31m-                return float(ln.split(':',1)[1].strip().replace('s',''))[m
+[31m-            except Exception:[m
+[31m-                return 0.0[m
+[31m-        search_time_val = _parse_time(st_line) if st_line else 0.0[m
+[31m-        translator_time_val = _parse_time(tr_line) if tr_line else 0.0[m
+[31m-[m
+[31m-        if success:[m
+[31m-            length_display = length if length is not None else 0[m
+[31m-            print(f" ->  Success! Length: {length_display}, Search: {search_time_val:.4f}s, Translator: {translator_time_val:.4f}s")[m
+[31m-            sizes.append(size)[m
+[31m-            times.append(search_time_val)[m
+[31m-            plan_lengths.append(length_display)[m
+[31m-        else:[m
+[31m-            print(' -> Failure')[m
+[31m-[m
+[31m-        csv_row = {[m
+[31m-            'planner': config_name,[m
+[31m-            'grid_size': size,[m
+[31m-            'solve_time_search_s': search_time_val,[m
+[31m-            'translator_time_s': translator_time_val,[m
+[31m-            'plan_length': (length if length is not None else 0),[m
+[31m-            'optimal': (config_name.startswith('A*'))[m
+[31m-        }[m
+[31m-        _append_csv_result(os.path.join(os.getcwd(), 'benchmark_results.csv'), csv_row,[m
+[31m-                           header=['planner','grid_size','solve_time_search_s','translator_time_s','plan_length','optimal'])[m
+[32m+[m[32m    lines_out = result.stdout.split('\n')[m
+[32m+[m[32m    st_line = next((ln for ln in lines_out if 'Search time:' in ln), None)[m
+[32m+[m[32m    tr_line = next((ln for ln in lines_out if 'Translator time:' in ln), None)[m
+[32m+[m[41m    [m
+[32m+[m[32m    def _parse_time(line):[m
+[32m+[m[32m        try:[m
+[32m+[m[32m            return float(line.split(':', 1)[1].strip().replace('s', ''))[m
+[32m+[m[32m        except (ValueError, IndexError):[m
+[32m+[m[32m            return 0.0[m
+[32m+[m[41m    [m
+[32m+[m[32m    search_time = _parse_time(st_line) if st_line else 0.0[m
+[32m+[m[32m    translator_time = _parse_time(tr_line) if tr_line else 0.0[m
+[32m+[m[41m    [m
+[32m+[m[32m    return success, search_time, translator_time, (plan_length or 0)[m
+ [m
+[31m-    return sizes, times, plan_lengths[m
+ [m
+ def _get_optimal_plan_length(instance, planner_path):[m
+     """Runs A* (lmcut) on a single instance to find the optimal plan length."""[m
+[31m-    grid = instance['grid'][m
+[31m-    start_pos = instance['start_pos'][m
+[31m-    size = len(grid)[m
+[31m-    config_name = "astar-lmcut-optimal-check"[m
+[31m-[m
+[31m-    problem_filename = f"temp-problem-{config_name}.pddl"[m
+[31m-    generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)[m
+[32m+[m[32m    grid, start_pos, size = instance['grid'], instance['start_pos'], len(instance['grid'])[m
+[32m+[m[41m    [m
+[32m+[m[32m    problem_filename = "temp_minefield_problem.pddl"[m
+     domain_filename = "domain.pddl"[m
+[32m+[m[32m    generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)[m
+ [m
+[31m-    full_command = [[m
+[31m-        f"./{planner_path}", domain_filename, problem_filename,[m
+[31m-        "--search", "astar(lmcut())"[m
+[31m-    ][m
+[32m+[m[32m    full_command = [f"./{planner_path}", domain_filename, problem_filename, "--search", "astar(lmcut())"][m
+ [m
+     print(f"\nFinding optimal plan length on {size}x{size} grid...", end='', flush=True)[m
+     result = subprocess.run(full_command, capture_output=True, text=True, check=False)[m
+[31m-[m
+[31m-    try:[m
+[31m-        os.remove(problem_filename)[m
+[32m+[m[41m    [m
+[32m+[m[32m    try: os.remove(problem_filename)[m
+     except OSError: pass[m
+ [m
+     plan_candidates = sorted(glob.glob('sas_plan*'), key=os.path.getmtime)[m
+[36m@@ -573,9 +749,7 @@[m [mdef _get_optimal_plan_length(instance, planner_path):[m
+ [m
+ def analyze_performance_with_pddl_planner():[m
+     """Analyzes performance by running planners on a suite of size-progressing, random instances."""[m
+[31m-    if not MATPLOTLIB_AVAILABLE:[m
+[31m-        print("Cannot run analysis without matplotlib.")[m
+[31m-        return[m
+[32m+[m[41m    [m
+ [m
+     density_map = {'r': 0.10, 'c': 0.30, 'cr': 0.45}[m
+     density_names = {'r': 'Rare', 'c': 'Common', 'cr': 'Crowded'}[m
+[36m@@ -591,8 +765,7 @@[m [mdef analyze_performance_with_pddl_planner():[m
+             print("Invalid density key. Please use 'r', 'c', or 'cr'.")[m
+             return[m
+             [m
+[31m-        seed_input = input("Enter a seed for reproducibility (blank for random): ").strip()[m
+[31m-        seed = None if seed_input == "" else int(seed_input)[m
+[32m+[m[32m        seed, _ = _get_pddl_instance_generation_params()[m
+ [m
+         prompt = "\nChoose planner: [1] A* (lmcut), [2] A* (hmax), [3] LAMA, [4] Compare Planners: "[m
+         planner_choice = input(prompt)[m
+[36m@@ -606,7 +779,7 @@[m [mdef analyze_performance_with_pddl_planner():[m
+         print("Error: Invalid input. Please enter integers only.")[m
+         return[m
+ [m
+[31m-    max_steps_value = 50  # Default value in case of an issue[m
+[32m+[m[32m    max_steps_value = 50[m
+     include_z3 = False[m
+     [m
+     if planner_choice == '4':[m
+[36m@@ -629,19 +802,15 @@[m [mdef analyze_performance_with_pddl_planner():[m
+                         start_for_opt = next(( (r,c) for r in range(max_size) for c in range(max_size) if temp_grid[r][c] != 'O'), (0,0))[m
+                         optimal_length = _get_optimal_plan_length({'grid': temp_grid, 'start_pos': start_for_opt}, planner_path)[m
+                         if optimal_length:[m
+[31m-                            max_steps_input_val = optimal_length + 5 # Adding small value to guarantee [m
+[32m+[m[32m                            max_steps_input_val = optimal_length + 5[m[41m [m
+                             print(f"\n--> Using max_steps = {max_steps_input_val} for all Z3 benchmarks. <--\n")[m
+[31m-                        else:[m
+[31m-                            print("Could not determine optimal length automatically.")[m
+[31m-                    else:[m
+[31m-                        print("Could not generate a sample instance to determine optimal length.")[m
+[32m+[m[32m                        else: print("Could not determine optimal length automatically.")[m
+[32m+[m[32m                    else: print("Could not generate a sample instance to determine optimal length.")[m
+                 else:[m
+                     try:[m
+                         max_steps_input_val = int(max_steps_input)[m
+[31m-                        if max_steps_input_val <= 0:[m
+[31m-                            print("Max steps must be a positive integer.")[m
+[31m-                    except ValueError:[m
+[31m-                        print("Invalid input. Please enter a positive integer or 'o'.")[m
+[32m+[m[32m                        if max_steps_input_val <= 0: print("Max steps must be a positive integer.")[m
+[32m+[m[32m                    except ValueError: print("Invalid input. Please enter a positive integer or 'o'.")[m
+             if max_steps_input_val > 0:[m
+                 max_steps_value = max_steps_input_val[m
+ [m
+[36m@@ -663,15 +832,11 @@[m [mdef analyze_performance_with_pddl_planner():[m
+         )[m
+         if grid:[m
+             print(f" Found after {tries} tries.")[m
+[31m-            if current_seed is not None:[m
+[31m-                current_seed += 1[m
+[31m-            [m
+[31m-            sample = {[m
+[32m+[m[32m            if current_seed is not None: current_seed += 1[m
+[32m+[m[32m            benchmark_instances.append({[m
+                 'grid': grid, 'start_pos': start_pos,[m
+[31m-                'max_steps': max_steps_value,[m
+[31m-                'grid_size': size[m
+[31m-            }[m
+[31m-            benchmark_instances.append(sample)[m
+[32m+[m[32m                'max_steps': max_steps_value, 'grid_size': size[m
+[32m+[m[32m            })[m
+         else:[m
+             print(f" Failed after many tries. Aborting benchmark.")[m
+             return[m
+[36m@@ -687,14 +852,64 @@[m [mdef analyze_performance_with_pddl_planner():[m
+     }[m
+     [m
+     if planner_choice == '4':[m
+[31m-        comparison_results = {}[m
+[31m-        for key, config in planner_configs.items():[m
+[31m-            sizes, times, lengths = _run_single_planner_benchmark(config, benchmark_instances, planner_path)[m
+[31m-            comparison_results[config['name']] = { 'sizes': sizes, 'times': times, 'lengths': lengths }[m
+[31m-        [m
+[32m+[m[32m        all_planners = [config['name'] for config in planner_configs.values()][m
+         if include_z3:[m
+[31m-            sizes, times, lengths = _run_single_z3_benchmark(benchmark_instances)[m
+[31m-            comparison_results['Z3 Solver'] = { 'sizes': sizes, 'times': times, 'lengths': lengths }[m
+[32m+[m[32m            all_planners.append('Z3 Solver')[m
+[32m+[m[32m        comparison_results = {name: {'sizes': [], 'times': [], 'lengths': []} for name in all_planners}[m
+[32m+[m
+[32m+[m[32m        for instance in benchmark_instances:[m
+[32m+[m[32m            grid, start_pos, size = instance['grid'], instance['start_pos'], instance['grid_size'][m
+[32m+[m[32m            print(f"\n--- Testing Instance: Grid Size {size}x{size} ---")[m
+[32m+[m
+[32m+[m[32m            problem_filename = "temp_minefield_problem.pddl"[m
+[32m+[m[32m            domain_filename = "domain.pddl"[m
+[32m+[m[32m            generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)[m
+[32m+[m
+[32m+[m[32m            for config in planner_configs.values():[m
+[32m+[m[32m                name = config['name'][m
+[32m+[m[32m                print(f"  -> Running {name}...", end='', flush=True)[m
+[32m+[m[32m                success, search_t, trans_t, length = _execute_planner_run(config, problem_filename, domain_filename, planner_path)[m
+[32m+[m
+[32m+[m[32m                if success:[m
+[32m+[m[32m                    print(f" Success! Length: {length}, Search: {search_t:.4f}s")[m
+[32m+[m[32m                    comparison_results[name]['sizes'].append(size)[m
+[32m+[m[32m                    comparison_results[name]['times'].append(search_t)[m
+[32m+[m[32m                    comparison_results[name]['lengths'].append(length)[m
+[32m+[m[32m                else:[m
+[32m+[m[32m                    print(" Failure.")[m
+[32m+[m[41m                [m
+[32m+[m[32m                _append_csv_result([m
+[32m+[m[32m                    os.path.join(os.getcwd(), 'benchmark_results.csv'),[m
+[32m+[m[32m                    {'planner': name, 'grid_size': size, 'solve_time_search_s': search_t, 'translator_time_s': trans_t,[m
+[32m+[m[32m                     'plan_length': length, 'optimal': name.startswith('A*')},[m
+[32m+[m[32m                    ['planner', 'grid_size', 'solve_time_search_s', 'translator_time_s', 'plan_length', 'optimal'][m
+[32m+[m[32m                )[m
+[32m+[m[41m            [m
+[32m+[m[32m            if include_z3:[m
+[32m+[m[32m                print(f"  -> Running Z3 Solver...", end='', flush=True)[m
+[32m+[m[32m                solution, _, solve_time = solve_minefield_plan([m
+[32m+[m[32m                    grid, start_pos, instance['max_steps'], max_cost=None, costs=None[m
+[32m+[m[32m                )[m
+[32m+[m[32m                plan_length = len(solution) - 1 if solution else 0[m
+[32m+[m[32m                if solution:[m
+[32m+[m[32m                    print(f" Success! Length: {plan_length}, Time: {solve_time:.4f}s")[m
+[32m+[m[32m                    comparison_results['Z3 Solver']['sizes'].append(size)[m
+[32m+[m[32m                    comparison_results['Z3 Solver']['times'].append(solve_time)[m
+[32m+[m[32m                    comparison_results['Z3 Solver']['lengths'].append(plan_length)[m
+[32m+[m[32m                else:[m
+[32m+[m[32m                    print(" Failure.")[m
+[32m+[m[41m                [m
+[32m+[m[32m                _append_csv_result([m
+[32m+[m[32m                    os.path.join(os.getcwd(), 'benchmark_results.csv'),[m
+[32m+[m[32m                    {'planner': 'Z3 Solver', 'grid_size': size, 'solve_time_search_s': solve_time, 'translator_time_s': 0,[m
+[32m+[m[32m                     'plan_length': plan_length, 'optimal': False},[m
+[32m+[m[32m                    ['planner', 'grid_size', 'solve_time_search_s', 'translator_time_s', 'plan_length', 'optimal'][m
+[32m+[m[32m                )[m
+[32m+[m
+[32m+[m[32m            try:[m
+[32m+[m[32m                os.remove(problem_filename)[m
+[32m+[m[32m            except OSError:[m
+[32m+[m[32m                pass[m
+         [m
+         print("\nAnalysis complete. Generating comparison plots...")[m
+         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12), sharex=True)[m
+[36m@@ -703,36 +918,54 @@[m [mdef analyze_performance_with_pddl_planner():[m
+         title_line2 = f"(Z3 Max Steps: {max_steps_value})" if include_z3 else ""[m
+         fig.suptitle(f"{title_line1}\n{title_line2}".strip(), fontsize=16)[m
+ [m
+[31m-        colors = {'A* with LMCut': 'red', 'A* with hMax': 'blue', 'LAMA': 'green'}[m
+[31m-        if include_z3:[m
+[31m-            colors['Z3 Solver'] = 'gold'[m
+[32m+[m[32m        colors = {'A* with LMCut': 'red', 'A* with hMax': 'blue', 'LAMA': 'green', 'Z3 Solver': 'gold'}[m
+ [m
+         for name, data in comparison_results.items():[m
+             if data['sizes']:[m
+                 sorted_points = sorted(zip(data['sizes'], data['times'], data['lengths']))[m
+                 s_sorted, t_sorted, l_sorted = zip(*sorted_points)[m
+[31m-                color = colors.get(name, 'black')[m
+[31m-                ax1.plot(s_sorted, t_sorted, 'o-', label=name, color=color)[m
+[31m-                ax2.plot(s_sorted, l_sorted, 'o-', label=name, color=color)[m
+[31m-[m
+[31m-        ax1.set_title("Solve Time vs. Grid Size")[m
+[31m-        ax1.set_ylabel("Solve Time (seconds)")[m
+[31m-        ax1.grid(True)[m
+[31m-        ax1.legend()[m
+[31m-[m
+[31m-        ax2.set_title("Plan Length vs. Grid Size")[m
+[31m-        ax2.set_xlabel("Grid Size (N x N)")[m
+[31m-        ax2.set_ylabel("Plan Length (Number of Actions)")[m
+[31m-        ax2.grid(True)[m
+[31m-        ax2.legend()[m
+[32m+[m[32m                ax1.plot(s_sorted, t_sorted, 'o-', label=name, color=colors.get(name, 'black'))[m
+[32m+[m[32m                ax2.plot(s_sorted, l_sorted, 'o-', label=name, color=colors.get(name, 'black'))[m
+[32m+[m
+[32m+[m[32m        ax1.set_title("Solve Time vs. Grid Size"); ax1.set_ylabel("Solve Time (seconds)"); ax1.grid(True); ax1.legend()[m
+[32m+[m[32m        ax2.set_title("Plan Length vs. Grid Size"); ax2.set_xlabel("Grid Size (N x N)"); ax2.set_ylabel("Plan Length"); ax2.grid(True); ax2.legend()[m
+         [m
+[31m-        plt.xticks(range(1, max_size + 1))[m
+[31m-        plt.tight_layout(rect=[0, 0, 1, 0.94])[m
+[31m-        plt.show()[m
+[32m+[m[32m        plt.xticks(range(1, max_size + 1)); plt.tight_layout(rect=[0, 0, 1, 0.94]); plt.show()[m
+ [m
+     elif planner_choice in planner_configs:[m
+         config = planner_configs[planner_choice][m
+[31m-        sizes, times, plan_lengths = _run_single_planner_benchmark(config, benchmark_instances, planner_path)[m
+[32m+[m[32m        sizes, times, plan_lengths = [], [], [][m
+[32m+[m
+[32m+[m[32m        print(f"\n--- Running Benchmark for: {config['name']} ---")[m
+[32m+[m[32m        for instance in benchmark_instances:[m
+[32m+[m[32m            grid, start_pos, size = instance['grid'], instance['start_pos'], instance['grid_size'][m
+[32m+[m[32m            print(f"  Testing grid (Size: {size}x{size})...", end='', flush=True)[m
+[32m+[m
+[32m+[m[32m            problem_filename = "temp_minefield_problem.pddl"[m
+[32m+[m[32m            domain_filename = "domain.pddl"[m
+[32m+[m[32m            generate_pddl_problem(grid, start_pos, f"problem-size-{size}", filename=problem_filename)[m
+[32m+[m
+[32m+[m[32m            success, search_t, trans_t, length = _execute_planner_run(config, problem_filename, domain_filename, planner_path)[m
+[32m+[m
+[32m+[m[32m            if success:[m
+[32m+[m[32m                print(f" Success! Length: {length}, Search: {search_t:.4f}s")[m
+[32m+[m[32m                sizes.append(size)[m
+[32m+[m[32m                times.append(search_t)[m
+[32m+[m[32m                plan_lengths.append(length)[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print(" Failure.")[m
+[32m+[m[41m            [m
+[32m+[m[32m            try:[m
+[32m+[m[32m                os.remove(problem_filename)[m
+[32m+[m[32m            except OSError:[m
+[32m+[m[32m                pass[m
+[32m+[m[41m            [m
+[32m+[m[32m            _append_csv_result([m
+[32m+[m[32m                os.path.join(os.getcwd(), 'benchmark_results.csv'),[m
+[32m+[m[32m                {'planner': config['name'], 'grid_size': size, 'solve_time_search_s': search_t, 'translator_time_s': trans_t,[m
+[32m+[m[32m                 'plan_length': length, 'optimal': config['name'].startswith('A*')},[m
+[32m+[m[32m                ['planner', 'grid_size', 'solve_time_search_s', 'translator_time_s', 'plan_length', 'optimal'][m
+[32m+[m[32m            )[m
+         [m
+         if not sizes:[m
+             print("\nNo solutions found to plot.")[m
+[36m@@ -742,24 +975,18 @@[m [mdef analyze_performance_with_pddl_planner():[m
+         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10), sharex=True)[m
+         fig.suptitle(f"Planner Performance: {config['name']}\n(Gold: {density_names[gold_density_key]}, Obstacles: {density_names[obs_density_key]})", fontsize=16)[m
+ [m
+[31m-        ax1.plot(sizes, times, 'o-', color='blue')[m
+[31m-        ax1.set_title("Solve Time vs. Grid Size")[m
+[31m-        ax1.set_ylabel("Solve Time (seconds)")[m
+[31m-        ax1.grid(True)[m
+[31m-[m
+[31m-        ax2.plot(sizes, plan_lengths, 'o-', color='green')[m
+[31m-        ax2.set_title("Plan Length vs. Grid Size")[m
+[31m-        ax2.set_xlabel("Grid Size (N x N)")[m
+[31m-        ax2.set_ylabel("Plan Length (Number of Actions)")[m
+[31m-        ax2.grid(True)[m
+[32m+[m[32m        ax1.plot(sizes, times, 'o-', color='blue'); ax1.set_title("Solve Time vs. Grid Size"); ax1.set_ylabel("Solve Time (seconds)"); ax1.grid(True)[m
+[32m+[m[32m        ax2.plot(sizes, plan_lengths, 'o-', color='green'); ax2.set_title("Plan Length vs. Grid Size"); ax2.set_xlabel("Grid Size (N x N)"); ax2.set_ylabel("Plan Length"); ax2.grid(True)[m
+         [m
+[31m-        plt.xticks(range(1, max_size + 1))[m
+[31m-        plt.tight_layout(rect=[0, 0, 1, 0.94])[m
+[31m-        plt.show()[m
+[32m+[m[32m        plt.xticks(range(1, max_size + 1)); plt.tight_layout(rect=[0, 0, 1, 0.94]); plt.show()[m
+     else:[m
+         print("Invalid choice.")[m
+ [m
+ [m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m[32m# === MAIN EXECUTION ===========================================================[m
+[32m+[m[32m# ==============================================================================[m
+[32m+[m
+ def main():[m
+     """Main menu to run different analysis modes."""[m
+     print("--- GoldsInMineField Performance Analyzer ---")[m
+[36m@@ -770,23 +997,26 @@[m [mdef main():[m
+         print("1. Analyze performance by Grid Size.")[m
+         print("2. Analyze performance by Max Steps (k).")[m
+         print("3. Analyze performance by Gold Count.")[m
+[31m-        print("4. Analyze aperformance by Obstacle Density.")[m
+[32m+[m[32m        print("4. Analyze performance by Obstacle Density.")[m
+[32m+[m[32m        print("5. Analyze performance for Cost Configuration.")[m
+[32m+[m
+         print("\n--- Comparative Analysis ---")[m
+[31m-        print("5. Compare Planners (Fast Downward & Z3).")[m
+[32m+[m[32m        print("6. Compare Planners (Fast Downward & Z3).")[m
+         [m
+         print("\n0. Exit.")[m
+         choice = input("Enter your choice: ")[m
+ [m
+[31m-        if choice == '1':[m
+[31m-            analyze_performance_by_grid_size()[m
+[31m-        elif choice == '2':[m
+[31m-            analyze_performance_by_max_steps()[m
+[31m-        elif choice == '3':[m
+[31m-            analyze_performance_by_gold_count()[m
+[31m-        elif choice == '4':[m
+[31m-            analyze_performance_by_obstacle_density()[m
+[31m-        elif choice == '5':[m
+[31m-            analyze_performance_with_pddl_planner()[m
+[32m+[m[32m        menu = {[m
+[32m+[m[32m            '1': analyze_performance_by_grid_size,[m
+[32m+[m[32m            '2': analyze_performance_by_max_steps,[m
+[32m+[m[32m            '3': analyze_performance_by_gold_count,[m
+[32m+[m[32m            '4': analyze_performance_by_obstacle_density,[m
+[32m+[m[32m            '5': cost_effect_performance_analyser,[m
+[32m+[m[32m            '6': analyze_performance_with_pddl_planner,[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        if choice in menu:[m
+[32m+[m[32m            menu[choice]()[m
+         elif choice == '0':[m
+             print("Exiting.")[m
+             break[m
