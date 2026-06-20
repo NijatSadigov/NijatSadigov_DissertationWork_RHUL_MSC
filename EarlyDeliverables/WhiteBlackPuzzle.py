@@ -35,31 +35,24 @@ def whiteBlackPuzzleSolver(inputState, maxSteps):
     for t in range(maxSteps + 1)
     ]
     tile_names = ['B', 'W', 'E']
-    # Add cost variables for each step
     cost = [Int(f'cost_{t}') for t in range(maxSteps + 1)]
     solver = Solver()
-    # First rule: every tile must be in one of the three states
     for t in range(maxSteps + 1):
         for i in range(4):
             solver.add(Or([state[t][i] == tile for tile in tile_names]))
-    # Initial state:
     for i in range(4):
         solver.add(state[0][i] == inputState[i])
-    # Initial cost is zero
     solver.add(cost[0] == 0)
-    # Transition rules
     add_transition_constraints(solver, state, cost, maxSteps)
     add_goal_constraints(solver, state, maxSteps)
     if solver.check() == sat:
         model = solver.model()
-        # Extract the solution steps
         solution = []
         for t in range(maxSteps + 1):
             step = [model.evaluate(state[t][i]).as_string() for i in range(4)]
             step_cost = model.evaluate(cost[t]).as_long()
             solution.append((step, step_cost))
         total_cost = model.evaluate(cost[maxSteps]).as_long()
-        # Print the solution steps
         print("Solution found:")
         for t, (step, step_cost) in enumerate(solution):
             print(f"Step {t}: {step} | Cost: {step_cost}")
@@ -74,7 +67,6 @@ def add_transition_constraints(solver, state, cost, maxSteps):
     for t in range(maxSteps):
         transitions = []
         for i in range(4):
-            # Move left
             if i > 0:
                 transitions.append(
                     And(
@@ -85,7 +77,6 @@ def add_transition_constraints(solver, state, cost, maxSteps):
                         cost[t + 1] == cost[t] + 1
                     )
                 )
-            # Move right
             if i < 3:
                 transitions.append(
                     And(
@@ -96,7 +87,6 @@ def add_transition_constraints(solver, state, cost, maxSteps):
                         cost[t + 1] == cost[t] + 1
                     )
                 )
-            # Jump left
             if i > 1:
                 transitions.append(
                     And(
@@ -107,7 +97,6 @@ def add_transition_constraints(solver, state, cost, maxSteps):
                         cost[t + 1] == cost[t] + 2
                     )
                 )
-            # Jump right
             if i < 2:
                 transitions.append(
                     And(
@@ -124,11 +113,9 @@ def add_goal_constraints(solver, state, maxSteps):
     """
     Adds goal constraints: black tile is the right-most tile, to the right of both white tiles, empty can be anywhere.
     """
-    # Enforce tile counts
     solver.add(Sum([If(state[maxSteps][i] == 'B', 1, 0) for i in range(4)]) == 1)
     solver.add(Sum([If(state[maxSteps][i] == 'W', 1, 0) for i in range(4)]) == 2)
     solver.add(Sum([If(state[maxSteps][i] == 'E', 1, 0) for i in range(4)]) == 1)
-    # For all i, if state[maxSteps][i] == 'B', then for all j, if state[maxSteps][j] == 'W', i > j
     constraints = []
     for i in range(4):
         for j in range(4):
@@ -140,11 +127,11 @@ def add_goal_constraints(solver, state, maxSteps):
                     )
                 )
     solver.add(And(constraints))
-#---------------------#
+
+
 def main():
-    # Example input state
-    inputState = ['B', 'W', 'W', 'E']  # Initial configuration
-    maxSteps = 5  # Maximum number of steps to reach the goal
+    inputState = ['B', 'W', 'W', 'E']  
+    maxSteps = 5  
     whiteBlackPuzzleSolver(inputState, maxSteps)
 if __name__ == "__main__":
     main()

@@ -1,4 +1,3 @@
-# DifferentPlanningInstances.py
 import random
 from collections import deque
 
@@ -48,17 +47,14 @@ def generate_random_instance(rows, cols, num_obstacles, num_gold, seed=None):
     cells = [(r, c) for r in range(rows) for c in range(cols)]
     rng.shuffle(cells)
 
-    # Place obstacles
     for _ in range(num_obstacles):
         r, c = cells.pop()
         grid[r][c] = 'O'
 
-    # Place gold
     for _ in range(num_gold):
         r, c = cells.pop()
         grid[r][c] = 'G'
 
-    # Prefer start on empty if possible; otherwise any remaining cell
     start_candidates = [p for p in cells if grid[p[0]][p[1]] == '.'] or cells
     start_pos = rng.choice(start_candidates)
 
@@ -77,7 +73,7 @@ def generate_reachable_instance(
     """
     rng = random.Random(seed)
     for attempt in range(1, max_tries + 1):
-        attempt_seed = rng.getrandbits(64)  # deterministic sequence under given 'seed'
+        attempt_seed = rng.getrandbits(64)
         grid, start = generate_random_instance(rows, cols, num_obstacles, num_gold, seed=attempt_seed)
 
         golds = [(r, c) for r in range(rows) for c in range(cols) if grid[r][c] == 'G']
@@ -162,7 +158,6 @@ def run_random_instance_mode():
         if max_cost is not None:
             print(f"Max Cost: {max_cost}")
 
-        # Now let the actual solver try it (for testing/visualization only)
         solution, final_cost, _ = solve_minefield_plan(
             grid, start_pos, params['max_steps'],
             max_cost=max_cost, costs=costs
