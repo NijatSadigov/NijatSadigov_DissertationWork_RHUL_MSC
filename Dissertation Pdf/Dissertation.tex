@@ -70,11 +70,11 @@ sorting=ynt
     \vspace{2cm}
     
     {\Huge \bfseries MSc Individual Project\par}
-    \vspace{3cm}
-    
+    \vspace{2cm}
+
     {\LARGE \bfseries Satisfiability Modulo Theories and Bounded Model Checking for AI Planning\par}
-    
-    \vspace{4cm}
+
+    \vspace{2cm}
     
     {\large A dissertation submitted in partial fulfillment of the requirements for the degree of Master of Science in Artificial Intelligence.\par}
 
@@ -82,7 +82,7 @@ sorting=ynt
 
     {\large \textbf{Author:} Nijat Sadigov\par}
     \vspace{0.4cm}
-    {\large \textbf{Supervisor:} \par}
+    {\large \textbf{Supervisor:} Dr Santiago Franco\par}
     
     \vfill
     
@@ -114,13 +114,13 @@ sorting=ynt
 \begin{center}
     \section*{Acknowledgements}
 
-    I would like to sincerely thank my supervisor. When I first came to the topic, it looked quite daunting for me but his encouragement and belief in my abilities gave me the confidence to begin. Throughout the project, his trust in my progress was a constant source of motivation. Whenever I felt stuck, he offered the crucial insights and ideas that helped me move forward. His suggestion to include a comparative analysis with PDDL planners, in particular, was instrumental in strengthening the evaluation and adding significant depth to this dissertation.
+    I would like to sincerely thank my supervisor, Dr Santiago Franco. When I first came to the topic, it looked quite daunting for me but his encouragement and belief in my abilities gave me the confidence to begin. Throughout the project, his trust in my progress was a constant source of motivation. Whenever I felt stuck, he offered the crucial insights and ideas that helped me move forward. His suggestion to include a comparative analysis with PDDL planners, in particular, was instrumental in strengthening the evaluation and adding significant depth to this dissertation.
 \end{center}
 
 \chapter*{Abstract}
 \thispagestyle{empty} 
 \addcontentsline{toc}{chapter}{Abstract}
-A dissertation investigates how satisfiability modulo theories and bounded model checking can be used to solve difficult AI planning problems. Satisfiability-based planning (also known as SAT based planning) has been a powerful approach. However, it is largely inefficient when it comes to planning problems from real-world systems. To deal with this limitation, this project presents a methodology that re-frames the planning task as formal verification task. Using BMC to encode a 2D grid-world planning problem into a single logical formula, which the Z3 SMT solver then solves, will be the main implementation. A model that satisfies this formula can be construed to represent a verified plan. In addition, the planner developed in this study was modified to deal with cost constraints, and a visualisation tool was developed to demonstrate the findings better. An extensive experimental evaluation was also designed to study the performance and scalability of this SMT-based approach. The analysis systematically assesses the solver's performance as a function of grid size, plan length, goal complexity and obstacle density. To better understand these results, an added comparative benchmarks was also performed against classical heuristic search planners. The results indicate that SMT based methods are flexible but specialized planners are computationally more efficient.
+This dissertation investigates how Satisfiability Modulo Theories (SMT) and Bounded Model Checking (BMC) can be used to solve difficult AI planning problems. Satisfiability-based planning (also known as SAT-based planning) has long been a powerful approach, but it can become inefficient for the kinds of planning problems that arise in real-world systems. To address this limitation, this project presents a methodology that re-frames the planning task as a formal-verification task. The core implementation uses BMC to encode a 2D grid-world planning problem as a single logical formula, which is then solved with the Z3 SMT solver; any model that satisfies the formula corresponds to a verified plan. In addition, the planner was extended to handle cost constraints, and a visualisation tool was developed to present the resulting plans more clearly. An extensive experimental evaluation was also designed to study the performance and scalability of this SMT-based approach. The analysis systematically assesses the solver's performance as a function of grid size, plan length, goal complexity and obstacle density. To put these results in context, a comparative benchmark was also performed against classical heuristic-search planners. The results indicate that SMT-based methods offer considerable modelling flexibility, but that specialised planners are computationally more efficient on this class of problems.
 % --- TABLE OF CONTENTS ---
 \tableofcontents
 
@@ -160,7 +160,7 @@ Additionally, to strengthen the evaluation of the proposed SMT/BMC methodology, 
 AI planning, also known as automated planning, is a long-standing, rich, and evolving field within Artificial Intelligence that creates capability for agents to autonomously determine a set of actions to achieve desired goal. The ultimate goal is to develop systems that can design sets of actions or "plans", which are expected to achieve specified objective.
 \subsection{Historical Context and Evolution}
 AI Planning emerged around 1966 from the necessity of giving autonomy to a wheeled robot, Shakey, which utilized the STRIPS (Stanford Research Institute Problem Solver) planner developed in 1971 \cite{Aiello2024}. The STRIPS representation was a significant contribution, originally based on first-order logic, which described actions in terms of preconditions and post-conditions (add and delete lists) \cite{Aiello2024}. Since then, many techniques have been introduced over 30 years, including Means-Ends Analysis, introduced by Newell and Simon in 1963; the first non-linear planner, NOAH (Nets of Action Hierarchies), by Sacerdoti in 1975; and its successor, Nonlin, in 1977 \cite{Hendler1990}. Although planning research produced many systems, for years there was not any formal way to compare the performance of different planners.This changed in 1998 when the AIPS conference introduced the first international planning competition, built around shared benchmark domains and the Planning Domain Definition Language (PDDL). In 1997, a ruling committee was established to decide how the contest should proceed, which ended up choosing the Planning Domain Definition Language (PDDL) notation for planning domains. As a result, five different planners were able to compete in 1998 \cite{McDermott2000}. PDDL has since been extended and has become the de facto standard for specifying planning problems \cite{Aiello2024}.
-Around the same time, Kautz and Selman (1992) introduced the idea of encoding planning problems as satisfiability instances \cite{Nareyek2005}.In this approach, a planning problem is translated into a propositional formula, where a satisfying assignment corresponds to a valid plan. This innovation connected the field of AI planning with the long history of research into satisfiability (SAT) and, later, Satisfiability Modulo Theories (SMT) \cite{Franco2009_History}. As SAT-based planners often outperform traditional search-based planners on certain problem types, this connection has resulted in significant performance improvements, a \cite{Weld1999}.
+Around the same time, Kautz and Selman (1992) introduced the idea of encoding planning problems as satisfiability instances \cite{Nareyek2005}.In this approach, a planning problem is translated into a propositional formula, where a satisfying assignment corresponds to a valid plan. This innovation connected the field of AI planning with the long history of research into satisfiability (SAT) and, later, Satisfiability Modulo Theories (SMT) \cite{Franco2009_History}. As SAT-based planners often outperform traditional search-based planners on certain problem types, this connection has resulted in significant performance improvements \cite{Weld1999}.
 \subsection{Formal Models and Core Concepts in Classical Planning}
 To make a planning issue solvable by a computer, it must be formally defined. The starting point for this is the \textbf{state-transition system}, which has the necessary mathematical structure to describe the environment and the agent's interactions to the planner. \cite{bonet2001planning}.
 A state-transition system is typically defined by a tuple $(S, A, \gamma)$, where:
@@ -284,7 +284,7 @@ Complete solvers are guaranteed to find a solution if one exists because they sy
     \end{itemize}
     \item \textbf{Binary Decision Diagrams (BDDs)} \cite{DrechslerSieling2001}
     \begin{itemize}
-        \item \textbf{Logic:} Rather than seeking out a solution, this method takes an entire Boolean formula and creates a unique, standart graph representation. If the resulting graph is not “null” then the formula is satisfiable. It is not an algorithm for searching, it is a technique for symbolic manipulation.
+        \item \textbf{Logic:} Rather than seeking out a solution, this method takes an entire Boolean formula and creates a unique, standard graph representation. If the resulting graph is not “null” then the formula is satisfiable. It is not an algorithm for searching, it is a technique for symbolic manipulation.
     \end{itemize}
 \end{itemize}
 
@@ -306,7 +306,7 @@ Incomplete solvers use local search and stochastic (randomized) methods, operati
 
 
 \end{itemize}
-\subsubsection{But}
+\subsubsection{From SAT to SMT}
 While these solvers are incredibly powerful for pure logic, their inability to natively handle non-Boolean concepts like arithmetic directly motivates the extension to Satisfiability Modulo Theories (SMT), which will be discussed in the following section.
 \section{Satisfiability Modulo Theories (SMT)}
 \label{sec:smt}
@@ -413,7 +413,7 @@ cd downward
 ./fast-downward.py domain.pddl problem.pddl --search
 "astar(lmcut())"
     \end{verbatim}
-    \item But in case of this application, There is no need to compile anything manually, as PerformanceAnalyser does it so just add fast-downward.py file in the same folder with PerformanceAnalyser.py
+    \item In the case of this application, there is no need to compile anything manually, as the Performance Analyzer does it automatically; simply add the \texttt{fast-downward.py} file to the same folder as \texttt{PerformanceAnalyzer.py}.
 \end{enumerate}
 
 \subsection*{Matplotlib for Performance Analysis}
@@ -428,7 +428,7 @@ pip install matplotlib
 \noindent In this project, its main purpose is demonstration of performance analysis result by processing raw output data from planners and creating a table.
 \section{An example to demonstrate the power of SMT: Solving Sudoku with Z3}
 
-To demonstrate the fundamental principles of Satisfiability Modulo Theories (SMT) and the practical application of the Z3 solver, a classic and well-known constraint satisfaction problem -- Sudoku -- would be a great example. The logical structure of Sudoku makes it a great study material for translating a set of rules into formal SMT model. This basic exercise checks current Z3 setup and also demonstrates the declerative nature of SMT before applying these techniques to the more complex domain of bounded model checking.
+To demonstrate the fundamental principles of Satisfiability Modulo Theories (SMT) and the practical application of the Z3 solver, a classic and well-known constraint satisfaction problem -- Sudoku -- would be a great example. The logical structure of Sudoku makes it a great study material for translating a set of rules into formal SMT model. This basic exercise checks current Z3 setup and also demonstrates the declarative nature of SMT before applying these techniques to the more complex domain of bounded model checking.
 \subsection{Problem Formulation}
 Sudoku is a number-placement puzzle played on a $9 \times 9$ grid. The objective is to fill the grid with digits from 1 to 9, without repetition of digits in any row, column and sub-blocks. These constraints can be formally stated as follows:
 \begin{enumerate}
@@ -487,7 +487,7 @@ if puzzle[i][j] != 0:
 \end{verbatim}
 
 \subsection{Solving and Results}
-After loading all constraints into the solver, \texttt{solver.check()} are then inkoved. If the problem is satisfiable (\texttt{sat}), the solver has found a valid assignment of values to all cell variables that satisfies every asserted constraint. Which means that user can retrieve this solution using \texttt{solver.model()}. For instance, given the following puzzle:
+After loading all constraints into the solver, \texttt{solver.check()} is then invoked. If the problem is satisfiable (\texttt{sat}), the solver has found a valid assignment of values to all cell variables that satisfies every asserted constraint. Which means that user can retrieve this solution using \texttt{solver.model()}. For instance, given the following puzzle:
 \begin{verbatim}
 Unsolved Puzzle:
 -------------------------
@@ -857,7 +857,7 @@ The interface consists of two main components:
     \item \textbf{Grid View:} A graphical representation of the minefield, where each cell type (empty, obstacle, gold, robot) is rendered with a distinct color and shape. The robot's movement is animated as the user navigates through the steps.
     \item \textbf{UI Panel:} A panel located below the grid displays critical information for the current step, including the step number and the cumulative cost, providing immediate feedback on the plan's execution.
 \end{itemize}
-This visualization tool is good-to-have not only for demonstrating the planner's final output but also as a crucial debugging item during development. It made it significantly easier to identify and correct hidden errors in the complex transition and frame axiom constraints. For an example of the interface at the beginning and end of a solution path, see Figures~\ref{fig:vis_start} and~\ref{fig:vis_end} in Appendix~\ref{app:vis_examples}
+This visualization tool was valuable not only for demonstrating the planner's final output but also as a crucial debugging aid during development. It made it significantly easier to identify and correct hidden errors in the complex transition and frame axiom constraints. For an example of the interface at the beginning and end of a solution path, see Figures~\ref{fig:vis_start} and~\ref{fig:vis_end} in Appendix~\ref{app:vis_examples}
 
 
 
@@ -886,7 +886,7 @@ In order to have efficient performance analysis, a time limit was initiated and 
     \item \textbf{\texttt{analyze\_performance\_by\_max\_steps()}}: Investigates the relationship between the plan length (the bound $k$ in BMC) and solve time. It uses a fixed grid and incrementally increases the \texttt{max\_steps} parameter to identify the "phase transition" point where a problem becomes solvable.
     \item \textbf{\texttt{analyze\_performance\_by\_gold\_count()}}: Measures how goal complexity affects performance by varying the number of gold pieces on a fixed-size grid.
     \item \textbf{\texttt{analyze\_performance\_by\_obstacle\_density()}}: Explores how the environment's topology impacts planning difficulty by systematically increasing the number of obstacles.
-    \item \textbf{\texttt{cost\_effect\_performance\_analyser()}}: Explores how the cost values  impacts planning difficulty by systematically solving the same problem in 3 different scenarios-- no cost, generous max cost, and rescricted max cost.
+    \item \textbf{\texttt{cost\_effect\_performance\_analyser()}}: Explores how the cost values  impacts planning difficulty by systematically solving the same problem in 3 different scenarios-- no cost, generous max cost, and restricted max cost.
 \end{itemize}
 Last but not least, another collection of functions was developed to compare the performance of the SMT solver with bounded model checking against classic planners using PDDL. The main function, \textbf{\texttt{analyze\_performance\_with\_pddl\_planner}}, controls this benchmark process. It first generates a suite of random or reachable (based on user's request) instances of progressively increasing size. The function then iterates through each generated instance. For each one, it creates a single temporary problem file using the \textbf{\texttt{pddl\_generator}}. It then proceeds to run each selected planner configuration on this same instance. The execution of the Fast Downward configurations (e.g., A* or LAMA) is managed by a helper function, \textbf{\texttt{\_execute\_planner\_run}}, which handles the subprocess call and parses the output to extract key metrics like search time and plan length. In case user requests, the SMT solver is also called directly within this main loop. This ensures that every planner is benchmarked on the exact same problem file under identical conditions before the temporary file is removed. Finally, after all instances have been tested, the main function gathers the results from all planners and generates comparative plots showing how solve time and plan length scale with grid size for each approach.
 \subsubsection{PDDL Implementation: \texttt{domain.pddl} and \texttt{pddl\_generator.py}}
@@ -901,7 +901,7 @@ To benchmark the SMT planner against other classical planners, an integration wi
 In summary, the implementation of the performance analyzer system provides a comprehensive and robust framework for evaluating the SMT-based planner. The core script, \texttt{PerformanceAnalyzer.py}, automates the entire experimental process, from generating diverse test instances to systematically measuring and visualizing the solver's performance against key variables like grid size and goal complexity. This allows for a deep analysis of the SMT approach's intrinsic strengths and weaknesses. Furthermore, the integration with PDDL, through the formal \texttt{domain.pddl} file and the \texttt{pddl\_generator.py} script, extends this framework to allow for direct, fair comparisons against classical planners. Together, these components create the necessary toolchain to rigorously validate the planner's correctness and thoroughly benchmark its performance in a broader context.
 \chapter{Experimental Results and Analysis}
 \label{chap:results}
-To evaluate the performance and scalability of the proposed SMT-based planning approach, a series of experiments were conducted. Following chapter demonstrate the environment in which these experiments were run, the methodology for generating test instances and measuring performance, and the analysis of resulting data.
+To evaluate the performance and scalability of the proposed SMT-based planning approach, a series of experiments were conducted. The following chapter describes the environment in which these experiments were run, the methodology for generating test instances and measuring performance, and the analysis of the resulting data.
 \section{Experimental Setup}
 \label{sec:exp_setup}
 
@@ -944,7 +944,7 @@ The size of the planning grid is a primary factor determining the problem's comp
 \paragraph{Hypothesis} It is expected that the solver's runtime will grow non-linearly with the increase in grid size.
 \paragraph{Setup}
 \begin{itemize}
-    \item \textbf{Grid Size}: Varies from $2 \times 2$ until $20 \times 20$ or untill the timeout is reached.
+    \item \textbf{Grid Size}: Varies from $2 \times 2$ to $20 \times 20$ or until the timeout is reached.
     \item \textbf{Plan Length Bound ($k$)}: Fixed at 20 steps.
     \item \textbf{Instance Configuration}: 1 Gold, 1 Obstacle.
 \end{itemize}
@@ -1066,7 +1066,7 @@ The results, shown in Figure~\ref{fig:cost_comp_common}, are revealing. The perf
 
 To evaluate the performance of the SMT-based approach, a comparative benchmark was conducted against classical planners using the Fast Downward system. The experiment compares the Z3 solver against three classical configurations: A* search with the LMCut heuristic, A* search with the hMax heuristic, and the LAMA satisficing planner.
 \paragraph{Hypothesis:}
-It is excepted that the specialized heuristic search algorithms of classical planners will significantly outperform the general-purpose SMT solver in both solve time and plan quality (length). The SMT approach's strength lies in expressiveness, not raw planning speed for classical domains and considering main purpose of SMT approach is checking satifiability, its performance on plan length is also expected to be poor.
+It is expected that the specialized heuristic search algorithms of classical planners will significantly outperform the general-purpose SMT solver in both solve time and plan quality (length). The SMT approach's strength lies in expressiveness, not raw planning speed for classical domains, and since the main purpose of the SMT approach is checking satisfiability, its performance on plan length is also expected to be poor.
 \paragraph{Setup}
 \begin{itemize}
 \item \textbf{Grid Size}: Varies from 2×2 up to 6×6.
@@ -1092,7 +1092,7 @@ The experimental assessment presents a clear-cut and consistent narrative about 
 \subsection*{The Challenge of Combinatorial Complexity}
 The experiments showed that the planner’s performance is very sensitive to the combinatorial complexity of the SMT formula which is unavoidable in the Bounded Model Checking (BMC) encoding. In this approach, the complete planning problem is translated into a single, large logical formula, which gives rise to a variable for the state of each cell at each time step. As a consequence, formula size and complexity increase depending on many factors.
 
-The most direct scaling factor is the \textbf{grid size}. As the grid dimensions ($N^2$) increase, the complexity of the formula grows polynomially. The real problem is not the number of variables, it is arised from the explosion in the number of \textbf{transition constraints} that connect those state variables over time. At every time step, for every cell, the solver must think about every possible move and check that the \textbf{frame axioms} hold, i.e, what does not change. This results in an extremely dense network of logical dependencies. In contrast to a heuristic search algorithm, which uses a form of \textbf{locality} to explore the state space, the BMC encoding forces the SMT solver to find a globally consistent assignment for the entire space-time volume at once. An absence of a clear, step-by-step search drives the exponential increase in solve time noticed as grid size increases (Figure~\ref{fig:grid_size_no_cost}).
+The most direct scaling factor is the \textbf{grid size}. As the grid dimensions ($N^2$) increase, the complexity of the formula grows polynomially. The real problem is not the number of variables; it arises from the explosion in the number of \textbf{transition constraints} that connect those state variables over time. At every time step, for every cell, the solver must think about every possible move and check that the \textbf{frame axioms} hold, i.e, what does not change. This results in an extremely dense network of logical dependencies. In contrast to a heuristic search algorithm, which uses a form of \textbf{locality} to explore the state space, the BMC encoding forces the SMT solver to find a globally consistent assignment for the entire space-time volume at once. An absence of a clear, step-by-step search drives the exponential increase in solve time noticed as grid size increases (Figure~\ref{fig:grid_size_no_cost}).
 
 Similarly, \textbf{gold density} also leads to an exponential increase in difficulty (Figure~\ref{fig:gold_density_performance}), but through a different mechanism. Each piece of gold increases size of the final goal conjunction by adding a new predicate. As result, the goal condition becomes more complicated, forcing the solver to satisfy a larger set of simultaneous constraints. As the analysis shows, this creates a sharp ``tipping point'' where the search effort grows non-linearly, and the problem can rapidly transition from trivial to intractable.
 

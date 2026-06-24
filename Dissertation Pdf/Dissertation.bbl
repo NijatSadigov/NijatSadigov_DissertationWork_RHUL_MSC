@@ -1,0 +1,1131 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global/global}
+    \entry{Davis1962}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=3030b497304f96b07639c080bd40073a}{%
+           family={Davis},
+           familyi={D\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=24e4630f17ad70c904b474689fa7c2f7}{%
+           family={Logemann},
+           familyi={L\bibinitperiod},
+           given={George},
+           giveni={G\bibinitperiod}}}%
+        {{hash=e12dfefe9f68decf10be77e2a9ee8760}{%
+           family={Loveland},
+           familyi={L\bibinitperiod},
+           given={Donald},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{cd811c39e320a06b71599b34923063af}
+      \strng{fullhash}{cd811c39e320a06b71599b34923063af}
+      \strng{fullhashraw}{cd811c39e320a06b71599b34923063af}
+      \strng{bibnamehash}{cd811c39e320a06b71599b34923063af}
+      \strng{authorbibnamehash}{cd811c39e320a06b71599b34923063af}
+      \strng{authornamehash}{cd811c39e320a06b71599b34923063af}
+      \strng{authorfullhash}{cd811c39e320a06b71599b34923063af}
+      \strng{authorfullhashraw}{cd811c39e320a06b71599b34923063af}
+      \field{labelalpha}{DLL62}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Communications of the ACM}
+      \field{number}{7}
+      \field{title}{A Machine Program for Theorem-Proving}
+      \field{volume}{5}
+      \field{year}{1962}
+      \field{pages}{394\bibrangedash 397}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1145/368273.368557
+      \endverb
+    \endentry
+    \entry{Cook1971}{inproceedings}{}{}
+      \name{author}{1}{}{%
+        {{hash=609a39905dc0e988c3b294dceecdb1e4}{%
+           family={Cook},
+           familyi={C\bibinitperiod},
+           given={Stephen\bibnamedelima A.},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{fullhash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{fullhashraw}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{bibnamehash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{authorbibnamehash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{authornamehash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{authorfullhash}{609a39905dc0e988c3b294dceecdb1e4}
+      \strng{authorfullhashraw}{609a39905dc0e988c3b294dceecdb1e4}
+      \field{labelalpha}{Coo71}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Third Annual ACM Symposium on Theory of Computing}
+      \field{title}{The Complexity of Theorem-Proving Procedures}
+      \field{year}{1971}
+      \field{pages}{151\bibrangedash 158}
+      \range{pages}{8}
+    \endentry
+    \entry{Hendler1990}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=b03c1c11511fa3c1c6224a741f227be4}{%
+           family={Hendler},
+           familyi={H\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ebe3bd4655e38e022a85f9962c2ff5f2}{%
+           family={Tate},
+           familyi={T\bibinitperiod},
+           given={Austin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=28ae803ca8700756003c6933ff79e7fa}{%
+           family={Drummond},
+           familyi={D\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{fullhash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{fullhashraw}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{bibnamehash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{authorbibnamehash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{authornamehash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{authorfullhash}{c09a16725f90a93c17b3b1786fbbe482}
+      \strng{authorfullhashraw}{c09a16725f90a93c17b3b1786fbbe482}
+      \field{labelalpha}{HTD90}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AI Magazine}
+      \field{number}{2}
+      \field{title}{AI Planning: Systems and Techniques}
+      \field{volume}{11}
+      \field{year}{1990}
+      \field{pages}{61\bibrangedash 77}
+      \range{pages}{17}
+    \endentry
+    \entry{Selman1992}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=0ff75e71f593b1e7ef8dc99e4a1ff418}{%
+           family={Selman},
+           familyi={S\bibinitperiod},
+           given={Bart},
+           giveni={B\bibinitperiod}}}%
+        {{hash=7320ce63720226a24ddacb870e54c99e}{%
+           family={Levesque},
+           familyi={L\bibinitperiod},
+           given={Hector},
+           giveni={H\bibinitperiod}}}%
+        {{hash=038ffc65ff3065e40cf2ea419cc8b5c7}{%
+           family={Mitchell},
+           familyi={M\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{fullhash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{fullhashraw}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{bibnamehash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{authorbibnamehash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{authornamehash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{authorfullhash}{d83b5afa8372b90a8df1c827e518fe39}
+      \strng{authorfullhashraw}{d83b5afa8372b90a8df1c827e518fe39}
+      \field{labelalpha}{SLM92}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Tenth National Conference on Artificial Intelligence (AAAI-92)}
+      \field{title}{A New Method for Solving Hard Satisfiability Problems}
+      \field{year}{1992}
+      \field{pages}{440\bibrangedash 446}
+      \range{pages}{7}
+    \endentry
+    \entry{Kautz1996}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=0e4b0970ec35035b160339ca69796393}{%
+           family={Kautz},
+           familyi={K\bibinitperiod},
+           given={Henry\bibnamedelima A.},
+           giveni={H\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=0ff75e71f593b1e7ef8dc99e4a1ff418}{%
+           family={Selman},
+           familyi={S\bibinitperiod},
+           given={Bart},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{fullhash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{fullhashraw}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{bibnamehash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{authorbibnamehash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{authornamehash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{authorfullhash}{a8303b32fc7c85caef9be259dacc84ba}
+      \strng{authorfullhashraw}{a8303b32fc7c85caef9be259dacc84ba}
+      \field{labelalpha}{KS96}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Thirteenth National Conference on Artificial Intelligence (AAAI'96)}
+      \field{title}{Pushing the Envelope: Planning, Propositional Logic, and Stochastic Search}
+      \field{year}{1996}
+      \field{pages}{1194\bibrangedash 1201}
+      \range{pages}{8}
+    \endentry
+    \entry{mcdermott1998pddl}{report}{}{}
+      \name{author}{8}{}{%
+        {{hash=66214d38bc0445397014162e36965ec4}{%
+           family={McDermott},
+           familyi={M\bibinitperiod},
+           given={Drew},
+           giveni={D\bibinitperiod}}}%
+        {{hash=d4b01a4cf3a9690cd8e7bb1a53071daf}{%
+           family={Ghallab},
+           familyi={G\bibinitperiod},
+           given={Malik},
+           giveni={M\bibinitperiod}}}%
+        {{hash=6cf9c5ed02ac6db65dea8214e94905de}{%
+           family={Howe},
+           familyi={H\bibinitperiod},
+           given={Adele},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b7e2206d58af745bf112a1c17517336c}{%
+           family={Knoblock},
+           familyi={K\bibinitperiod},
+           given={Craig},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6718bd022164e0067dc7a89a3e32462c}{%
+           family={Ram},
+           familyi={R\bibinitperiod},
+           given={Ashwin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=108bc6e5f71a32699fcf07b7e8957310}{%
+           family={Veloso},
+           familyi={V\bibinitperiod},
+           given={Manuela},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ca4142849ba872b1d80e5336e7376ca2}{%
+           family={Weld},
+           familyi={W\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=d80e3b83791ba97da18f7a610dc7cc9a}{%
+           family={Wilkins},
+           familyi={W\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Yale Center for Computational Vision}%
+        {Control}%
+      }
+      \strng{namehash}{f1cb9678bc632974b061b4f6396ab0c7}
+      \strng{fullhash}{8760a4b779134085d99b793aaac7f895}
+      \strng{fullhashraw}{8760a4b779134085d99b793aaac7f895}
+      \strng{bibnamehash}{f1cb9678bc632974b061b4f6396ab0c7}
+      \strng{authorbibnamehash}{f1cb9678bc632974b061b4f6396ab0c7}
+      \strng{authornamehash}{f1cb9678bc632974b061b4f6396ab0c7}
+      \strng{authorfullhash}{8760a4b779134085d99b793aaac7f895}
+      \strng{authorfullhashraw}{8760a4b779134085d99b793aaac7f895}
+      \field{labelalpha}{McD+98}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{The AIPS-98 Planning Competition Committee}
+      \field{number}{CVC TR-98-003/DCS TR-1165}
+      \field{title}{{PDDL} -- The Planning Domain Definition Language}
+      \field{type}{techreport}
+      \field{year}{1998}
+    \endentry
+    \entry{Weld1999}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=61b10d727859c1da98ec8527f1fb1bc2}{%
+           family={Weld},
+           familyi={W\bibinitperiod},
+           given={Daniel\bibnamedelima S.},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{fullhash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{fullhashraw}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{bibnamehash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{authorbibnamehash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{authornamehash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{authorfullhash}{61b10d727859c1da98ec8527f1fb1bc2}
+      \strng{authorfullhashraw}{61b10d727859c1da98ec8527f1fb1bc2}
+      \field{labelalpha}{Wel99}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AI Magazine}
+      \field{number}{2}
+      \field{title}{Recent Advances in AI Planning}
+      \field{volume}{20}
+      \field{year}{1999}
+      \field{pages}{93\bibrangedash 123}
+      \range{pages}{31}
+    \endentry
+    \entry{McDermott2000}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=66214d38bc0445397014162e36965ec4}{%
+           family={McDermott},
+           familyi={M\bibinitperiod},
+           given={Drew},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{66214d38bc0445397014162e36965ec4}
+      \strng{fullhash}{66214d38bc0445397014162e36965ec4}
+      \strng{fullhashraw}{66214d38bc0445397014162e36965ec4}
+      \strng{bibnamehash}{66214d38bc0445397014162e36965ec4}
+      \strng{authorbibnamehash}{66214d38bc0445397014162e36965ec4}
+      \strng{authornamehash}{66214d38bc0445397014162e36965ec4}
+      \strng{authorfullhash}{66214d38bc0445397014162e36965ec4}
+      \strng{authorfullhashraw}{66214d38bc0445397014162e36965ec4}
+      \field{labelalpha}{McD00}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AI Magazine}
+      \field{number}{2}
+      \field{title}{The 1998 AI Planning Systems Competition}
+      \field{volume}{21}
+      \field{year}{2000}
+      \field{pages}{35\bibrangedash 55}
+      \range{pages}{21}
+    \endentry
+    \entry{bonet2001planning}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=14c4a2e4412947e680b6111e87c1287f}{%
+           family={Bonet},
+           familyi={B\bibinitperiod},
+           given={Blai},
+           giveni={B\bibinitperiod}}}%
+        {{hash=67eb4ebf36f30bf60d2793bb8251b313}{%
+           family={Geffner},
+           familyi={G\bibinitperiod},
+           given={Héctor},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{fullhash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{fullhashraw}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{bibnamehash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{authorbibnamehash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{authornamehash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{authorfullhash}{d1c923a7870a63e243ce608f1c7a17a2}
+      \strng{authorfullhashraw}{d1c923a7870a63e243ce608f1c7a17a2}
+      \field{labelalpha}{BG01}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Intelligence}
+      \field{number}{1-2}
+      \field{title}{Planning as heuristic search}
+      \field{volume}{129}
+      \field{year}{2001}
+      \field{pages}{5\bibrangedash 33}
+      \range{pages}{29}
+      \verb{doi}
+      \verb 10.1016/S0004-3702(01)00108-4
+      \endverb
+    \endentry
+    \entry{Clarke2001_BMC}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=76fe4736f1859a02499e11e8122c3d3b}{%
+           family={Clarke},
+           familyi={C\bibinitperiod},
+           given={Edmund},
+           giveni={E\bibinitperiod}}}%
+        {{hash=22081d00e30965a89f413e528510617e}{%
+           family={Biere},
+           familyi={B\bibinitperiod},
+           given={Armin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d2d069ece8ff0aa4075b6f28bfe5829a}{%
+           family={Raimi},
+           familyi={R\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a9c1f54328aafe25c651beb2bebb66f6}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Yunshan},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Kluwer Academic Publishers}%
+      }
+      \strng{namehash}{d511cdc35fdab1c5e3062002ba4d43bc}
+      \strng{fullhash}{fc9cf4c851cbb5c18cdfdb502ed0bb69}
+      \strng{fullhashraw}{fc9cf4c851cbb5c18cdfdb502ed0bb69}
+      \strng{bibnamehash}{d511cdc35fdab1c5e3062002ba4d43bc}
+      \strng{authorbibnamehash}{d511cdc35fdab1c5e3062002ba4d43bc}
+      \strng{authornamehash}{d511cdc35fdab1c5e3062002ba4d43bc}
+      \strng{authorfullhash}{fc9cf4c851cbb5c18cdfdb502ed0bb69}
+      \strng{authorfullhashraw}{fc9cf4c851cbb5c18cdfdb502ed0bb69}
+      \field{labelalpha}{Cla+01}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Formal Methods in System Design}
+      \field{number}{1}
+      \field{title}{Bounded Model Checking Using Satisfiability Solving}
+      \field{volume}{19}
+      \field{year}{2001}
+      \field{pages}{7\bibrangedash 34}
+      \range{pages}{28}
+    \endentry
+    \entry{DrechslerSieling2001}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=4d56a3a9976a0ce108bd3250bf0cb226}{%
+           family={Drechsler\bibnamedelima Rolf},
+           familyi={D\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={Detlef},
+           giveni={D\bibinitperiod},
+           suffix={Sieling},
+           suffixi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{fullhash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{fullhashraw}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{bibnamehash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{authorbibnamehash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{authornamehash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{authorfullhash}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \strng{authorfullhashraw}{4d56a3a9976a0ce108bd3250bf0cb226}
+      \field{labelalpha}{Dre01}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal on Software Tools for Technology Transfer}
+      \field{title}{Binary decision diagrams in theory and practice}
+      \field{volume}{3}
+      \field{year}{2001}
+      \field{pages}{112\bibrangedash 136}
+      \range{pages}{25}
+      \verb{doi}
+      \verb 10.1007/s100090100056
+      \endverb
+    \endentry
+    \entry{koenig2002heuristic}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=6e0da33fcadd327da8ebc74eea9cafe2}{%
+           family={Koenig},
+           familyi={K\bibinitperiod},
+           given={Sven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=b9d73e49ae07cfecf1627d967452d02c}{%
+           family={Bauer},
+           familyi={B\bibinitperiod},
+           given={Colin},
+           giveni={C\bibinitperiod}}}%
+        {{hash=43a0040586c34db3ec0f37c39c1b0119}{%
+           family={Furcy},
+           familyi={F\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{fullhash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{fullhashraw}{8fcff670d24ff05325460794ad143bf5}
+      \strng{bibnamehash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{authorbibnamehash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{authornamehash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{authorfullhash}{8fcff670d24ff05325460794ad143bf5}
+      \strng{authorfullhashraw}{8fcff670d24ff05325460794ad143bf5}
+      \field{labelalpha}{KBF02}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 6th International Conference on Artificial Intelligence Planning and Scheduling (AIPS'02)}
+      \field{title}{Heuristic Search-Based Replanning}
+      \field{year}{2002}
+      \field{pages}{294\bibrangedash 301}
+      \range{pages}{8}
+    \endentry
+    \entry{Mezard2002}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=b04a2b73d4b5f3367d29287f6c75be19}{%
+           family={Mézard},
+           familyi={M\bibinitperiod},
+           given={Marc},
+           giveni={M\bibinitperiod}}}%
+        {{hash=633aedb846f931194e4d892bef86fdc0}{%
+           family={Parisi},
+           familyi={P\bibinitperiod},
+           given={Giorgio},
+           giveni={G\bibinitperiod}}}%
+        {{hash=43077d96c4a7dff840bc34463d1d0751}{%
+           family={Zecchina},
+           familyi={Z\bibinitperiod},
+           given={Riccardo},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{fullhash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{fullhashraw}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{bibnamehash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{authorbibnamehash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{authornamehash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{authorfullhash}{8a31a0184fe8c04958c355c8d9efc352}
+      \strng{authorfullhashraw}{8a31a0184fe8c04958c355c8d9efc352}
+      \field{labelalpha}{MPZ02}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{5582}
+      \field{title}{Analytic and Algorithmic Solution of Random Satisfiability Problems}
+      \field{volume}{297}
+      \field{year}{2002}
+      \field{pages}{812\bibrangedash 815}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1126/science.1073287
+      \endverb
+    \endentry
+    \entry{mccluskey2003pddl}{inproceedings}{}{}
+      \name{author}{1}{}{%
+        {{hash=1e2151c7ad8a32d392cb9ccc1e3cafde}{%
+           family={McCluskey},
+           familyi={M\bibinitperiod},
+           given={T.L.},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Trento, Italy}%
+      }
+      \strng{namehash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{fullhash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{fullhashraw}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{bibnamehash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{authorbibnamehash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{authornamehash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{authorfullhash}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \strng{authorfullhashraw}{1e2151c7ad8a32d392cb9ccc1e3cafde}
+      \field{labelalpha}{McC03}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 13th International Conference on Automated Planning \& Scheduling (ICAPS-03)}
+      \field{title}{{PDDL}: A language with a purpose?}
+      \field{year}{2003}
+    \endentry
+    \entry{edelkamp2004pddl22}{report}{}{}
+      \name{author}{2}{}{%
+        {{hash=9cd6a78147b770972e2605a4b8322aa4}{%
+           family={Edelkamp},
+           familyi={E\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=330c5e7bb627c866984265b62cc1ab03}{%
+           family={Hoffmann},
+           familyi={H\bibinitperiod},
+           given={Jörg},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Institut für Informatik, Albert-Ludwigs-Universität Freiburg}%
+      }
+      \list{location}{1}{%
+        {Freiburg, Germany}%
+      }
+      \strng{namehash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{fullhash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{fullhashraw}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{bibnamehash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{authorbibnamehash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{authornamehash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{authorfullhash}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \strng{authorfullhashraw}{ef85628a6948d99b69c0e0ffcf22ff63}
+      \field{labelalpha}{EH04}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{195}
+      \field{title}{{PDDL2.2}: The Language for the Classical Part of the 4th International Planning Competition}
+      \field{type}{techreport}
+      \field{year}{2004}
+    \endentry
+    \entry{gerevini2005plan}{report}{}{}
+      \name{author}{2}{}{%
+        {{hash=67230c149f4e34c16632c10accf8251b}{%
+           family={Gerevini},
+           familyi={G\bibinitperiod},
+           given={Alfonso},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e4030d413640a18f41ea68bab115087b}{%
+           family={Long},
+           familyi={L\bibinitperiod},
+           given={Derek},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Department of Electronics for Automation, University of Brescia}%
+      }
+      \list{location}{1}{%
+        {Brescia, Italy}%
+      }
+      \strng{namehash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{fullhash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{fullhashraw}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{bibnamehash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{authorbibnamehash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{authornamehash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{authorfullhash}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \strng{authorfullhashraw}{05d4e8e2c8c81a6b6de75d56a41936c5}
+      \field{labelalpha}{GL05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Plan Constraints and Preferences in {PDDL3}: The Language of the Fifth International Planning Competition}
+      \field{type}{techreport}
+      \field{year}{2005}
+    \endentry
+    \entry{Nareyek2005}{article}{}{}
+      \name{author}{8}{}{%
+        {{hash=bfb7265c872c21b7c3abe30003c1e746}{%
+           family={Nareyek},
+           familyi={N\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=1f8286ef3ecd8afc60704087241b3af0}{%
+           family={Freuder},
+           familyi={F\bibinitperiod},
+           given={Eugene\bibnamedelima C.},
+           giveni={E\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=c79d7bc4854db1c02a1bea9b9302dfd9}{%
+           family={Fourer},
+           familyi={F\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=64b1c24315c372925712fa60d40dbdb4}{%
+           family={Giunchiglia},
+           familyi={G\bibinitperiod},
+           given={Enrico},
+           giveni={E\bibinitperiod}}}%
+        {{hash=d0eb2eb58b1d205ba872e2a5ecd649b7}{%
+           family={Goldman},
+           familyi={G\bibinitperiod},
+           given={Robert\bibnamedelima P.},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=b2f57860068ca81fddf9083bdf8e72a5}{%
+           family={Kautz},
+           familyi={K\bibinitperiod},
+           given={Henry},
+           giveni={H\bibinitperiod}}}%
+        {{hash=515fda71c651bb7137be05148412399a}{%
+           family={Rintanen},
+           familyi={R\bibinitperiod},
+           given={Jussi},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ebe3bd4655e38e022a85f9962c2ff5f2}{%
+           family={Tate},
+           familyi={T\bibinitperiod},
+           given={Austin},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{b8cee55d292267dcbdb5a6342d52210b}
+      \strng{fullhash}{727154f9487db64d67862d9f5c4c62e0}
+      \strng{fullhashraw}{727154f9487db64d67862d9f5c4c62e0}
+      \strng{bibnamehash}{b8cee55d292267dcbdb5a6342d52210b}
+      \strng{authorbibnamehash}{b8cee55d292267dcbdb5a6342d52210b}
+      \strng{authornamehash}{b8cee55d292267dcbdb5a6342d52210b}
+      \strng{authorfullhash}{727154f9487db64d67862d9f5c4c62e0}
+      \strng{authorfullhashraw}{727154f9487db64d67862d9f5c4c62e0}
+      \field{labelalpha}{Nar+05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Intelligent Systems}
+      \field{number}{2}
+      \field{title}{Constraints and AI Planning}
+      \field{volume}{20}
+      \field{year}{2005}
+      \field{pages}{62\bibrangedash 72}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1109/MIS.2005.27
+      \endverb
+    \endentry
+    \entry{thiebaux2005defense}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=a72d82e4445cb6f5e1422ca53bffa03a}{%
+           family={Thiébaux},
+           familyi={T\bibinitperiod},
+           given={Sylvie},
+           giveni={S\bibinitperiod}}}%
+        {{hash=330c5e7bb627c866984265b62cc1ab03}{%
+           family={Hoffmann},
+           familyi={H\bibinitperiod},
+           given={Jörg},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ea3c99f847e19974acae14650e2c41f0}{%
+           family={Nebel},
+           familyi={N\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{fullhash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{fullhashraw}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{bibnamehash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{authorbibnamehash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{authornamehash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{authorfullhash}{842d1c8231532ab9494b9bbd43ee06aa}
+      \strng{authorfullhashraw}{842d1c8231532ab9494b9bbd43ee06aa}
+      \field{labelalpha}{THN05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Intelligence}
+      \field{number}{1-2}
+      \field{title}{In defense of {PDDL} axioms}
+      \field{volume}{168}
+      \field{year}{2005}
+      \field{pages}{38\bibrangedash 69}
+      \range{pages}{32}
+      \verb{doi}
+      \verb 10.1016/j.artint.2005.05.004
+      \endverb
+    \endentry
+    \entry{helmert2006fast}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=518daa5cb5c87e0f92aa342eb223eba3}{%
+           family={Helmert},
+           familyi={H\bibinitperiod},
+           given={Malte},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{fullhash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{fullhashraw}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{bibnamehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{authorbibnamehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{authornamehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{authorfullhash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{authorfullhashraw}{518daa5cb5c87e0f92aa342eb223eba3}
+      \field{labelalpha}{Hel06}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Artificial Intelligence Research}
+      \field{title}{The Fast Downward Planning System}
+      \field{volume}{26}
+      \field{year}{2006}
+      \field{pages}{191\bibrangedash 246}
+      \range{pages}{56}
+      \verb{doi}
+      \verb 10.1613/jair.1705
+      \endverb
+    \endentry
+    \entry{HandbookSAT2009}{book}{}{}
+      \name{editor}{4}{}{%
+        {{hash=22081d00e30965a89f413e528510617e}{%
+           family={Biere},
+           familyi={B\bibinitperiod},
+           given={Armin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=adbf24c301850e2a04b396044f205f4d}{%
+           family={Heule},
+           familyi={H\bibinitperiod},
+           given={Marijn},
+           giveni={M\bibinitperiod}}}%
+        {{hash=9110f8aed04ba11abf11338d3fa9e672}{%
+           family={Maaren},
+           familyi={M\bibinitperiod},
+           given={Hans},
+           giveni={H\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=0083caa546c0b2a86576a95dbef046a9}{%
+           family={Walsh},
+           familyi={W\bibinitperiod},
+           given={Toby},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IOS Press}%
+      }
+      \strng{namehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{fullhash}{60fef90d3c5cb633c07f7a5f833c667a}
+      \strng{fullhashraw}{60fef90d3c5cb633c07f7a5f833c667a}
+      \strng{bibnamehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{editorbibnamehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{editornamehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{editorfullhash}{60fef90d3c5cb633c07f7a5f833c667a}
+      \strng{editorfullhashraw}{60fef90d3c5cb633c07f7a5f833c667a}
+      \field{labelalpha}{Bie+09}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{series}{Frontiers in Artificial Intelligence and Applications}
+      \field{title}{Handbook of Satisfiability}
+      \field{volume}{185}
+      \field{year}{2009}
+    \endentry
+    \entry{Franco2009_History}{incollection}{}{}
+      \name{author}{2}{}{%
+        {{hash=bd9366435be3ff6620bcc508c95f214e}{%
+           family={Franco},
+           familyi={F\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=68d13e965ed219fc3bd3fdcf9841652b}{%
+           family={Martin},
+           familyi={M\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \name{editor}{4}{}{%
+        {{hash=22081d00e30965a89f413e528510617e}{%
+           family={Biere},
+           familyi={B\bibinitperiod},
+           given={Armin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=adbf24c301850e2a04b396044f205f4d}{%
+           family={Heule},
+           familyi={H\bibinitperiod},
+           given={Marijn},
+           giveni={M\bibinitperiod}}}%
+        {{hash=9110f8aed04ba11abf11338d3fa9e672}{%
+           family={Maaren},
+           familyi={M\bibinitperiod},
+           given={Hans},
+           giveni={H\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=0083caa546c0b2a86576a95dbef046a9}{%
+           family={Walsh},
+           familyi={W\bibinitperiod},
+           given={Toby},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IOS Press}%
+      }
+      \strng{namehash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{fullhash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{fullhashraw}{61e720e2729188eb12f68c897d0668f0}
+      \strng{bibnamehash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{authorbibnamehash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{authornamehash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{authorfullhash}{61e720e2729188eb12f68c897d0668f0}
+      \strng{authorfullhashraw}{61e720e2729188eb12f68c897d0668f0}
+      \strng{editorbibnamehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{editornamehash}{bc3be1691d20d567b9af500e799dfef0}
+      \strng{editorfullhash}{60fef90d3c5cb633c07f7a5f833c667a}
+      \strng{editorfullhashraw}{60fef90d3c5cb633c07f7a5f833c667a}
+      \field{labelalpha}{FM09}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Handbook of Satisfiability}
+      \field{series}{Frontiers in Artificial Intelligence and Applications}
+      \field{title}{A History of Satisfiability}
+      \field{volume}{185}
+      \field{year}{2009}
+      \field{pages}{1\bibrangedash 78}
+      \range{pages}{78}
+    \endentry
+    \entry{roberts2009learning}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5df48ee49adad17520c9f344641c9e20}{%
+           family={Roberts},
+           familyi={R\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+        {{hash=6cf9c5ed02ac6db65dea8214e94905de}{%
+           family={Howe},
+           familyi={H\bibinitperiod},
+           given={Adele},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{fullhash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{fullhashraw}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{bibnamehash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{authorbibnamehash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{authornamehash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{authorfullhash}{ab74753e7fae535a04cb8c58b94dd696}
+      \strng{authorfullhashraw}{ab74753e7fae535a04cb8c58b94dd696}
+      \field{labelalpha}{RH09}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Intelligence}
+      \field{number}{5-6}
+      \field{title}{Learning from planner performance}
+      \field{volume}{173}
+      \field{year}{2009}
+      \field{pages}{536\bibrangedash 561}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1016/j.artint.2008.11.009
+      \endverb
+    \endentry
+    \entry{demoura2011smt}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=6f56e279fa3378e39f74c27d62149c2c}{%
+           family={De\bibnamedelima Moura},
+           familyi={D\bibinitperiod\bibinitdelim M\bibinitperiod},
+           given={Leonardo},
+           giveni={L\bibinitperiod}}}%
+        {{hash=99b7b42f13980bae3d14cd2bbc329658}{%
+           family={Bj{ø}rner},
+           familyi={B\bibinitperiod},
+           given={Nikolaj},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM New York, NY, USA}%
+      }
+      \strng{namehash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{fullhash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{fullhashraw}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{bibnamehash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{authorbibnamehash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{authornamehash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{authorfullhash}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \strng{authorfullhashraw}{3ae5d1423b655cb989fede4e5a1a0b43}
+      \field{labelalpha}{DB11}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Communications of the ACM}
+      \field{number}{9}
+      \field{title}{Satisfiability modulo theories: introduction and applications}
+      \field{volume}{54}
+      \field{year}{2011}
+      \field{pages}{69\bibrangedash 77}
+      \range{pages}{9}
+    \endentry
+    \entry{richter2011lama}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=b3b3bd2ad9b122b7907272c4f6e07385}{%
+           family={Richter},
+           familyi={R\bibinitperiod},
+           given={Silvia},
+           giveni={S\bibinitperiod}}}%
+        {{hash=26b3caa136c74e0732073ef2af461e8a}{%
+           family={Westphal},
+           familyi={W\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+        {{hash=518daa5cb5c87e0f92aa342eb223eba3}{%
+           family={Helmert},
+           familyi={H\bibinitperiod},
+           given={Malte},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=518daa5cb5c87e0f92aa342eb223eba3}{%
+           family={Helmert},
+           familyi={H\bibinitperiod},
+           given={Malte},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{fullhash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{fullhashraw}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{bibnamehash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{authorbibnamehash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{authornamehash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{authorfullhash}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{authorfullhashraw}{99baa6cb745419971c2ce569a95ac56c}
+      \strng{editorbibnamehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{editornamehash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{editorfullhash}{518daa5cb5c87e0f92aa342eb223eba3}
+      \strng{editorfullhashraw}{518daa5cb5c87e0f92aa342eb223eba3}
+      \field{labelalpha}{RWH11}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IPC 2011 Planner Abstracts}
+      \field{title}{{LAMA} 2008 and 2011}
+      \field{year}{2011}
+      \field{pages}{54\bibrangedash 57}
+      \range{pages}{4}
+    \endentry
+    \entry{Barrett2018_Handbook}{incollection}{}{}
+      \name{author}{2}{}{%
+        {{hash=f519b0ade21460e17b744091e47a6c39}{%
+           family={Barrett},
+           familyi={B\bibinitperiod},
+           given={Clark},
+           giveni={C\bibinitperiod}}}%
+        {{hash=17736d07fc9708df7a9802ea0d682814}{%
+           family={Tinelli},
+           familyi={T\bibinitperiod},
+           given={Cesare},
+           giveni={C\bibinitperiod}}}%
+      }
+      \name{editor}{4}{}{%
+        {{hash=1822cd554880ea55fd66357a96bca03e}{%
+           family={Clarke},
+           familyi={C\bibinitperiod},
+           given={Edmund\bibnamedelima M.},
+           giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=eeb928073fbee58751f87d401a62561a}{%
+           family={Henzinger},
+           familyi={H\bibinitperiod},
+           given={Thomas\bibnamedelima A.},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=5ac94523768e8fc4adb7a926b36d83e0}{%
+           family={Veith},
+           familyi={V\bibinitperiod},
+           given={Helmut},
+           giveni={H\bibinitperiod}}}%
+        {{hash=9865af1b742410e6dee8ca813e1ec733}{%
+           family={Bloem},
+           familyi={B\bibinitperiod},
+           given={Roderick},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer, Cham}%
+      }
+      \strng{namehash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{fullhash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{fullhashraw}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{bibnamehash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{authorbibnamehash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{authornamehash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{authorfullhash}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{authorfullhashraw}{8b0c25c7c6cbf35fb01eec1e7e6257cc}
+      \strng{editorbibnamehash}{2eed5a22a1fbe3a605ce6dc9254e65de}
+      \strng{editornamehash}{2eed5a22a1fbe3a605ce6dc9254e65de}
+      \strng{editorfullhash}{eea0cb89759dac86c5d80411829d95b2}
+      \strng{editorfullhashraw}{eea0cb89759dac86c5d80411829d95b2}
+      \field{labelalpha}{BT18}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Handbook of Model Checking}
+      \field{title}{Satisfiability Modulo Theories}
+      \field{year}{2018}
+      \field{pages}{305\bibrangedash 343}
+      \range{pages}{39}
+    \endentry
+    \entry{segovia2021generalized}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=a11ad337b540e8a6ee863da5cbb099d8}{%
+           family={Segovia-Aguas},
+           familyi={S\bibinithyphendelim A\bibinitperiod},
+           given={Javier},
+           giveni={J\bibinitperiod}}}%
+        {{hash=75f5d4baa1703f2e33ca279e39d15101}{%
+           family={Jiménez},
+           familyi={J\bibinitperiod},
+           given={Sergio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=04e29da5671d1500b96ab2d0d4b1c2c3}{%
+           family={Jonsson},
+           familyi={J\bibinitperiod},
+           given={Anders},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{fullhash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{fullhashraw}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{bibnamehash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{authorbibnamehash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{authornamehash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{authorfullhash}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \strng{authorfullhashraw}{4783ed0e0f2a0004f2919ac1ebb9fbb3}
+      \field{labelalpha}{SJJ21}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Thirty-First International Conference on Automated Planning and Scheduling (ICAPS 2021)}
+      \field{title}{Generalized Planning as Heuristic Search}
+      \field{year}{2021}
+      \field{pages}{569\bibrangedash 577}
+      \range{pages}{9}
+    \endentry
+    \entry{Aiello2024}{misc}{}{}
+      \name{author}{2}{}{%
+        {{hash=61c9418bf8975db8e23b20012c036b6a}{%
+           family={Aiello},
+           familyi={A\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=5e23ae8bbf3a3bdc7f098c901b70e229}{%
+           family={Georgievski},
+           familyi={G\bibinitperiod},
+           given={Ilche},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{fullhash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{fullhashraw}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{bibnamehash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{authorbibnamehash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{authornamehash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{authorfullhash}{72fee0fd80241fc4061f934aa960ed59}
+      \strng{authorfullhashraw}{72fee0fd80241fc4061f934aa960ed59}
+      \field{labelalpha}{AG24}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.AI}
+      \field{eprinttype}{arXiv}
+      \field{title}{Introduction to AI Planning}
+      \field{year}{2024}
+      \verb{eprint}
+      \verb 2412.11642
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
